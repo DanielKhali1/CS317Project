@@ -2,13 +2,14 @@
 //Require that js module express is in the program
 var express = require('express');
 var app = express();
-var server = app.listen(80, '0.0.0.0');
+var server = app.listen(80, '192.168.133.1');
 
 app.use(express.static('public'));
 
 var socket = require('socket.io');
 
 var io = socket(server);
+// io.set('origins', '0.0.0.0:80');
 
 io.sockets.on('connection', newConnection);
 

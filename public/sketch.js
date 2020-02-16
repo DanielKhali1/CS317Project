@@ -16,6 +16,8 @@ let bg;
 
 let name;
 
+let canJump = false;
+
 
 let identifier;
 x = false;
@@ -32,13 +34,14 @@ function setup() {
   names = ["Caboose", "Ugly", "Man", "Dog", "1337", "Uppity", "Bolas", "Roger"];
   name = names[floor(random(0, 7))];
   console.log(floor(random(0,7)));
+  name = prompt("NAME?");
 
 
   identifier = random(10);
-  createCanvas(1000, 800);
+  createCanvas(800, 800);
   background(0);
   player = new Player();
-  socket = io.connect('10.33.192.125')
+  socket = io.connect('192.168.133.1')
 }
 
 function mouseClicked()
@@ -57,9 +60,11 @@ function keyPressed() {
   {
     right = true;
   }
-  if(keyCode == UP_ARROW)
+  if(keyCode == UP_ARROW && canJump)
   {
+    player.vel.y *= 0;
     player.vel.y -= 10;
+    canJump = false;
   }
 
   if(keyCode == DOWN_ARROW)
@@ -84,7 +89,6 @@ function keyReleased()
 
 function draw() {
   background(bg);
-  text("HELLO", 20, 20);
   rect(50, 500, 200, 55);
   rect(300, 350, 200, 55);
   rect(550, 500, 200, 55);
@@ -121,7 +125,7 @@ function draw() {
           cli[i][1] = data.y;
           cli[i][2] = data.id;
           cli[i][3] = data.clr;
-          cli[i][4] = name;
+          cli[i][4] = data.n;
           break;
         }
       }
@@ -165,33 +169,69 @@ class Player {
       this.vel.add(this.acc);
       this.pos.add(this.vel);
 
-      if (this.pos.x < 50 + 200 &&
-         this.pos.x + this.diameter*2 > 50 &&
-         this.pos.y < 500 + 55 &&
-         this.pos.y + this.diameter*2 > 500)
+      if(this.vel.y > 0)
       {
-        this.pos.y = 500 - this.diameter*2;
-        this.vel.y *= 0;
-      }
+        if (this.pos.x < 50 + 200 &&
+           this.pos.x + this.diameter > 50 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.y = 500 - this.diameter*2;
+          this.vel.y *= 0;
+          canJump = true;
 
-      if (this.pos.x < 300 + 200 &&
-         this.pos.x + this.diameter*2 > 300 &&
-         this.pos.y < 350 + 55 &&
-         this.pos.y + this.diameter*2 > 350)
+        }
+
+        else if (this.pos.x < 300 + 200 &&
+           this.pos.x + this.diameter > 300 &&
+           this.pos.y < 350 + 55 &&
+           this.pos.y + this.diameter*2 > 350)
+        {
+          this.pos.y = 350 - this.diameter*2;
+          this.vel.y *= 0;
+          canJump = true;
+
+        }
+
+        else if (this.pos.x < 550 + 200 &&
+           this.pos.x + this.diameter > 550 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.y = 500 - this.diameter*2;
+          this.vel.y *= 0;
+          canJump = true;
+        }
+      }
+      if(this.vel.y < 0)
       {
-        this.pos.y = 350 - this.diameter*2;
-        this.vel.y *= 0;
-      }
+        if (this.pos.x < 50 + 200 &&
+           this.pos.x + this.diameter > 50 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.y = 500+55;
+          this.vel.y *= 0;
+        }
 
-      if (this.pos.x < 550 + 200 &&
-         this.pos.x + this.diameter*2 > 550 &&
-         this.pos.y < 500 + 55 &&
-         this.pos.y + this.diameter*2 > 500)
-      {
-        this.pos.y = 500 - this.diameter*2;
-        this.vel.y *= 0;
-      }
+        else if (this.pos.x < 300 + 200 &&
+           this.pos.x + this.diameter > 300 &&
+           this.pos.y < 350 + 55 &&
+           this.pos.y + this.diameter*2 > 350)
+        {
+          this.pos.y = 350 + 55;
+          this.vel.y *= 0;
+        }
 
+        else if (this.pos.x < 550 + 200 &&
+           this.pos.x + this.diameter > 550 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.y = 500 + 55;
+          this.vel.y *= 0;
+        }
+      }
       if(this.pos.y > height)
         this.pos.y = 0;
       if(this.pos.x > width)
@@ -204,11 +244,65 @@ class Player {
 
       if(left)
       {
+        if (this.pos.x-8 < 50 + 200 &&
+           this.pos.x-8 + this.diameter > 50 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.x = 50 + 200;
+        }
+
+        else if (this.pos.x-8 < 300 + 200 &&
+           this.pos.x-8 + this.diameter > 300 &&
+           this.pos.y < 350 + 55 &&
+           this.pos.y + this.diameter*2 > 350)
+        {
+          this.pos.x = 300 + 200;
+
+        }
+
+        else if (this.pos.x-8 < 550 + 200 &&
+           this.pos.x-8 + this.diameter > 550 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.x = 550 + 200;
+        }
+        else {
           player.pos.x -= 8;
+        }
+
       }
       if(right)
       {
+        if (this.pos.x+8 < 50 + 200 &&
+           this.pos.x+8 + this.diameter > 50 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.x = 50-this.diameter;
+        }
+
+        else if (this.pos.x+8 < 300 + 200 &&
+           this.pos.x+8 + this.diameter > 300 &&
+           this.pos.y < 350 + 55 &&
+           this.pos.y + this.diameter*2 > 350)
+        {
+          this.pos.x = 300-this.diameter;
+
+        }
+
+        else if (this.pos.x+8 < 550 + 200 &&
+           this.pos.x+8 + this.diameter > 550 &&
+           this.pos.y < 500 + 55 &&
+           this.pos.y + this.diameter*2 > 500)
+        {
+          this.pos.x = 550-this.diameter;
+        }
+        else {
           player.pos.x += 8;
+        }
+
       }
 
       if(this.vel.y > 15)
@@ -232,6 +326,9 @@ class Player {
   }
 
   display() {
+
+    text(name, this.pos.x- 20, this.pos.y - 10);
+
     fill(color);
     stroke(255);
     rect(this.pos.x, this.pos.y, this.diameter, this.diameter*2);
