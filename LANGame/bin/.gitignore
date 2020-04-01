@@ -3,3 +3,8 @@
 /Platform.class
 /Player.class
 /Vector.class
+/NetworkConnection.class
+/NetworkConnection$ConnectionThread.class
+/Server.class
+/Client.class
+/ChatApp.class
