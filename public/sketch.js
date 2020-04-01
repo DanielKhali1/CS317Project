@@ -41,7 +41,7 @@ function setup() {
   createCanvas(800, 800);
   background(0);
   player = new Player();
-  socket = io.connect('192.168.133.1')
+  socket = io.connect('192.168.0.9:3000')
 }
 
 function mouseClicked()

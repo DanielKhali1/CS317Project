@@ -1,8 +1,7 @@
-
 //Require that js module express is in the program
 var express = require('express');
 var app = express();
-var server = app.listen(80, '192.168.133.1');
+var server = app.listen(3000, "0.0.0.0");
 
 app.use(express.static('public'));
 
@@ -41,4 +40,4 @@ function newConnection(socket)
 
 }
 
-console.log("MY SOCKET SERVER IS RUNNING");
+console.log("MULTIPLAYER SERVER IS RUNNING");
