@@ -31,7 +31,7 @@ public class GUI extends Application
 	PlayerRect playerDisplay;
 	ArrayList<Rectangle> platformDisplay = new ArrayList<Rectangle>();
 	boolean isServer;
-	private NetworkConnection connection = isServer ? createServer() : createClient();
+	private NetworkConnection connection ;//= isServer ? createServer() : createClient();
 	
 	TextField nametf = new TextField("");
 
@@ -97,7 +97,6 @@ public class GUI extends Application
 
 				connection.startConnection();
 				primaryStage.show();
-				//otherPlayerDisplays.get(0).name.setText(nametf.getText());
 
 
 			} catch (Exception e1) 
@@ -116,7 +115,6 @@ public class GUI extends Application
 				gamePane.getChildren().add(nme);
 				isServer = false;
 				connection.startConnection();
-				connection.send("<->," + nametf.getText());
 
 				primaryStage.setTitle(isServer ? "Server: " : "Client: ");
 				primaryStage.show();
@@ -131,8 +129,9 @@ public class GUI extends Application
 		});
 		
 		
-		//otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
-		//otherPlayerDisplays.get(0).setFill(Color.BLUE);
+//		otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
+//		otherPlayerDisplays.get(0).setFill(Color.BLUE);
+//		gamePane.getChildren().addAll(otherPlayerDisplays.get(0), otherPlayerDisplays.get(0).name);
 	
 		playerDisplay = new PlayerRect(manager.player.getWidth(), manager.player.getHeight());
 		gamePane.getChildren().add(playerDisplay);
@@ -193,7 +192,7 @@ public class GUI extends Application
 			manager.update();
 			playerDisplay.setLayoutX(manager.player.getPos().x);	playerDisplay.setLayoutY(manager.player.getPos().y);
 			nme.setLayoutX(manager.player.getPos().x);
-			nme.setLayoutY(manager.player.getPos().y- 20);
+			nme.setLayoutY(manager.player.getPos().y - 20);
 			
 			try 
 			{
@@ -212,31 +211,39 @@ public class GUI extends Application
 	
 	
 	private Server createServer() {
-		return new Server(55555, data -> {
+		return new Server(55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
 				String[] datapoints = ((String) data).split(",");
 
 				
-				if(datapoints.length == 4 && !datapoints[1].equals(nametf.getText()) )
+				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
 					
+					boolean notFound = true;
 					for(int i = 0; i < otherPlayerDisplays.size(); i++)
 					{
+						
 						if(otherPlayerDisplays.get(i).name.getText().equals(datapoints[1]))
 						{
+							notFound = false;
 							otherPlayerDisplays.get(i).name.setLayoutX(Double.parseDouble(datapoints[2]));
 							otherPlayerDisplays.get(i).name.setLayoutY(Double.parseDouble(datapoints[3])- 20);
 							otherPlayerDisplays.get(i).setLayoutX(Double.parseDouble(datapoints[2])); 
 							otherPlayerDisplays.get(i).setLayoutY(Double.parseDouble(datapoints[3]));				
 						}
-					}
-				}
-				else if(datapoints.length == 2 && datapoints[0].equals("<->"))
-				{
-					otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
-					otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setText(datapoints[1]);
-					gamePane.getChildren().addAll(otherPlayerDisplays.get(otherPlayerDisplays.size()-1), otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name);
 
+					}
+					if(notFound)
+					{
+						otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setText(datapoints[1]);
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setLayoutX(Double.parseDouble(datapoints[2]));
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setLayoutY(Double.parseDouble(datapoints[3])- 20);
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).setLayoutX(Double.parseDouble(datapoints[2])); 
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).setLayoutY(Double.parseDouble(datapoints[3]));
+						gamePane.getChildren().addAll(otherPlayerDisplays.get(otherPlayerDisplays.size()-1), otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name);
+
+					}
 				}
 				try 
 				{
@@ -245,37 +252,56 @@ public class GUI extends Application
 				catch (Exception e)
 				{
 					//e.printStackTrace();
-					System.out.println("Had nothing to resend");
+					//System.out.println("Had nothing to resend");
 				}
 			});
 			
 		});
 	}
 	private Client createClient() {
-		return new Client("127.0.0.1", 55555, data -> {
+		return new Client("127.0.0.1", 55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
-				String[] datapoints = ((String) data).split(",");
+String[] datapoints = ((String) data).split(",");
+
 				
-								
-				if(datapoints.length == 4 && !datapoints[1].equals(nametf.getText()) )
+				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
 					
+					boolean notFound = true;
 					for(int i = 0; i < otherPlayerDisplays.size(); i++)
 					{
+						
 						if(otherPlayerDisplays.get(i).name.getText().equals(datapoints[1]))
 						{
+							notFound = false;
 							otherPlayerDisplays.get(i).name.setLayoutX(Double.parseDouble(datapoints[2]));
 							otherPlayerDisplays.get(i).name.setLayoutY(Double.parseDouble(datapoints[3])- 20);
 							otherPlayerDisplays.get(i).setLayoutX(Double.parseDouble(datapoints[2])); 
 							otherPlayerDisplays.get(i).setLayoutY(Double.parseDouble(datapoints[3]));				
-						} 
+						}
+
+					}
+					if(notFound)
+					{
+						System.out.println("I HAVE BEEN RAN");
+						otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setText(datapoints[1]);
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setLayoutX(Double.parseDouble(datapoints[2]));
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setLayoutY(Double.parseDouble(datapoints[3])- 20);
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).setLayoutX(Double.parseDouble(datapoints[2])); 
+						otherPlayerDisplays.get(otherPlayerDisplays.size()-1).setLayoutY(Double.parseDouble(datapoints[3]));
+						gamePane.getChildren().addAll(otherPlayerDisplays.get(otherPlayerDisplays.size()-1), otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name);
+
 					}
 				}
-				else if(datapoints.length == 2 && datapoints[0].equals("<->"))
+				try 
 				{
-					otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
-					otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name.setText(datapoints[1]);
-					gamePane.getChildren().addAll(otherPlayerDisplays.get(otherPlayerDisplays.size()-1), otherPlayerDisplays.get(otherPlayerDisplays.size()-1).name);
+					//connection.send(data);
+				} 
+				catch (Exception e)
+				{
+					//e.printStackTrace();
+					//System.out.println("Had nothing to resend");
 				}
 			});
 			

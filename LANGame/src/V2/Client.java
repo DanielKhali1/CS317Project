@@ -6,13 +6,14 @@ public class Client extends NetworkConnection{
 
 	private String ip;
 	private int port;
+	private String name;
 	
 	
-	public Client(String ip, int port, Consumer<Serializable> onReceiveCallback) {
+	public Client(String ip, int port, String name, Consumer<Serializable> onReceiveCallback) {
 		super(onReceiveCallback);
 		this.ip = ip;
 		this.port = port;
-	
+		this.name = name;
 	}
 
 	@Override

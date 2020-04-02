@@ -42,6 +42,10 @@ public abstract class NetworkConnection
 		
 		@Override
 		public void run() {
+			// if the socket is a server then start a new server socket.
+			// if the socket is a server then accept the adress, otherwise connect to the server over the servers IP and a port
+			// setup object output stream, setup object input stream.
+			
 			try(ServerSocket server = isServer() ? new ServerSocket(getPort()) : null;
 					Socket socket = isServer() ? server.accept() : new Socket(getIP(), getPort());
 					ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -51,6 +55,8 @@ public abstract class NetworkConnection
 				this.out = out;
 				socket.setTcpNoDelay(true);
 				
+				
+			// infinite while loop reading in objects
 				while(true) {
 					Serializable data = (Serializable) in.readObject();
 					onRecieveCallback.accept(data);

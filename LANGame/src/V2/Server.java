@@ -1,16 +1,17 @@
 package V2;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class Server extends NetworkConnection
 {
 
 	private int port;
+	String name;
 
-	public Server(int port, Consumer<Serializable> onReceiveCallback) {
+	public Server(int port, String name, Consumer<Serializable> onReceiveCallback) {
 		super(onReceiveCallback);
 		this.port = port;
+		this.name = name;
 	}
 
 	@Override
@@ -27,5 +28,6 @@ public class Server extends NetworkConnection
 	protected int getPort() {
 		return this.port;
 	}
+	
 	
 }
