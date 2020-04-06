@@ -261,7 +261,7 @@ public class GUI extends Application
 	private Client createClient() {
 		return new Client("127.0.0.1", 55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
-String[] datapoints = ((String) data).split(",");
+				String[] datapoints = ((String) data).split(",");
 
 				
 				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
