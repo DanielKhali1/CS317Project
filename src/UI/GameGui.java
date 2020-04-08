@@ -1,6 +1,8 @@
 package UI;
 
 import java.io.File;
+
+import Game.GUI;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -41,10 +43,6 @@ public class GameGui extends Application
 	String user = "Test";
 	String pw = "Test";
 	
-	  public static void main(String[] args) 
-	  {
-	    launch(args);
-	  }
 	    @Override
 	    public void start(Stage primaryStage) 
 	    {
@@ -78,11 +76,11 @@ public class GameGui extends Application
 	        
 	        
 	       host.setOnAction(e->{
-	    	   
+	    	   new GUI().start(new Stage());
 	       });
 	       
 	       join.setOnAction(e->{
-	    	   
+	    	   new GUI().start(new Stage());
 	       });
 	        
 	        //######################## login layout ########################################
@@ -172,5 +170,9 @@ public class GameGui extends Application
 
 	        primaryStage.show();
 	    }
+	    
+	    public static void main(String[] args) {
+			launch(args);
+		}
 
 }
