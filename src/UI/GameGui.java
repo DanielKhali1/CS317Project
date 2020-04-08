@@ -77,7 +77,13 @@ public class GameGui extends Application
 	        vb.getChildren().addAll(host, join);
 	        
 	        
-	        
+	       host.setOnAction(e->{
+	    	   
+	       });
+	       
+	       join.setOnAction(e->{
+	    	   
+	       });
 	        
 	        //######################## login layout ########################################
 	        
