@@ -1,7 +1,19 @@
 #pane{
+	
     	-fx-background-image: url("background.png");
     	-fx-background-repeat: stretch;   
     	-fx-background-size: 900 506;
+    	-fx-background-position: center center;
+	-fx-background-size: stretch;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-text-fill: white;
+}
+
+#gamepane{
+	
+    	-fx-background-image: url("res/gameBackground.png");
+    	-fx-background-repeat: stretch;   
+    	-fx-background-size: 1080 720;
     	-fx-background-position: center center;
 	-fx-background-size: stretch;
 	-fx-font-family: "Segoe UI Semibold";
@@ -22,6 +34,22 @@
 .logbutton{
 	-fx-background-color: white;
 	-fx-background-radius: 0;
+}
+
+.button{
+	-fx-background-color: #0033a1;
+	-fx-font-size: 20;
+	-fx-border-size: 1;
+	-fx-border-color: white;
+	-fx-text-fill: white;
+}
+
+.button:hover{
+	-fx-background-color: #001c59;
+	-fx-font-size: 20;
+	-fx-border-size: 1;
+	-fx-border-color: white;
+	-fx-text-fill: white;
 }
 
 
