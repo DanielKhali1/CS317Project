@@ -76,11 +76,13 @@ public class GameGui extends Application
 	        
 	        
 	       host.setOnAction(e->{
-	    	   new GUI().start(new Stage());
+	    	   new GUI(true).start(new Stage());
+	    	   primaryStage.close();
 	       });
 	       
 	       join.setOnAction(e->{
-	    	   new GUI().start(new Stage());
+	    	   new GUI(false).start(new Stage());
+	    	   primaryStage.close();
 	       });
 	        
 	        //######################## login layout ########################################
