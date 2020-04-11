@@ -43,6 +43,18 @@ public class GameGui extends Application
 	Scene homeScene;
 	String user = "Test";
 	String pw = "Test";
+	private boolean alreadyLogged = false;
+	
+		public GameGui(String user, String pw)
+		{
+			this.user = user;
+			this.pw = pw;
+			alreadyLogged =true;
+		}
+		public GameGui()
+		{
+			alreadyLogged = false;
+		}
 	
 	    @Override
 	    public void start(Stage primaryStage) 
@@ -61,15 +73,24 @@ public class GameGui extends Application
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			}
-	        primaryStage.setScene(loginScene);
-	        primaryStage.setTitle("Battle Royale Free for Kids");
-	        
+	    	
 	        //home scene
 	        Pane homePane = new Pane();
 	        homePane.setId("pane");
 	        homeScene = new Scene(homePane, 1000, 700);
 	        
-	        
+	        if(!alreadyLogged)
+	        {
+	        	primaryStage.setScene(loginScene);
+	        	primaryStage.setTitle("Battle Royale Free for Kids");
+	        	
+	        }
+	        else
+	        {
+	        	homeScene.getStylesheets().clear();
+	        	homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        	primaryStage.setScene(homeScene);	
+	        }
 	        VBox vb = new VBox();
 	        homePane.getChildren().add(vb);
 	        vb.setSpacing(20);
@@ -81,12 +102,12 @@ public class GameGui extends Application
 	        
 	        
 	       host.setOnAction(e->{
-	    	   new GUI(true).start(new Stage());
+	    	   new GUI(true, user,pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
 	       
 	       join.setOnAction(e->{
-	    	   new GUI(false).start(new Stage());
+	    	   new GUI(false,user,pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
 	        
@@ -171,6 +192,7 @@ public class GameGui extends Application
 		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        	primaryStage.setScene(homeScene);
 	        });
+	        
 	        
 	        //########################### homeScene layout ##########################
 	        
