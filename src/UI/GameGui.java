@@ -19,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -75,7 +76,7 @@ public class GameGui extends Application
 			}
 	    	
 	        //home scene
-	        Pane homePane = new Pane();
+	        BorderPane homePane = new BorderPane();
 	        homePane.setId("pane");
 	        homeScene = new Scene(homePane, 1000, 700);
 	        
@@ -91,16 +92,16 @@ public class GameGui extends Application
 	        	homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        	primaryStage.setScene(homeScene);	
 	        }
-	        VBox vb = new VBox();
-	        homePane.getChildren().add(vb);
-	        vb.setSpacing(20);
 	        
 	        Button host = new Button("Host");
 	        Button join = new Button("Join");
-	        
-	        vb.getChildren().addAll(host, join);
-	        
-	        
+	        host.getStyleClass().add("host");
+	        join.getStyleClass().add("join");
+	        HBox play = new HBox();
+	        play.getChildren().addAll(join, host);
+	        play.setAlignment(Pos.BASELINE_CENTER);
+	        homePane.setBottom(play);
+
 	       host.setOnAction(e->{
 	    	   new GUI(true, user,pw).start(new Stage());
 	    	   primaryStage.close();
@@ -199,6 +200,27 @@ public class GameGui extends Application
 	        
 	        
 	        //########################### homeScene layout ##########################
+	        homePane.setPadding(new Insets(30,20,20,20));
+	        HBox hometiles = new HBox();
+	        Button settings = new Button();
+	        Button profile = new Button();
+	        Button leader = new Button();
+	        profile.getStyleClass().add("profile");
+	        leader.getStyleClass().add("leaderboards");
+	        settings.getStyleClass().add("settings");
+	        hometiles.getChildren().addAll(settings, profile, leader);
+	        homePane.setCenter(hometiles);
+
+	        
+	       host.setOnAction(e->{
+	    	   new GUI(true, user, pw).start(new Stage());
+	    	   primaryStage.close();
+	       });
+	       
+	       join.setOnAction(e->{
+	    	   new GUI(false, user, pw).start(new Stage());
+	    	   primaryStage.close();
+	       });
 	        
 
 	        primaryStage.show();
