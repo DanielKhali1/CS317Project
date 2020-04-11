@@ -65,26 +65,6 @@ public class GameGui extends Application
 	        homeScene = new Scene(homePane, 1000, 700);
 	        
 	        
-	        VBox vb = new VBox();
-	        homePane.getChildren().add(vb);
-	        vb.setSpacing(20);
-	        
-	        Button host = new Button("Host");
-	        Button join = new Button("Join");
-	        
-	        vb.getChildren().addAll(host, join);
-	        
-	        
-	       host.setOnAction(e->{
-	    	   new GUI(true).start(new Stage());
-	    	   primaryStage.close();
-	       });
-	       
-	       join.setOnAction(e->{
-	    	   new GUI(false).start(new Stage());
-	    	   primaryStage.close();
-	       });
-	        
 	        //######################## login layout ########################################
 	        
 	        //title text
@@ -168,6 +148,26 @@ public class GameGui extends Application
 	        });
 	        
 	        //########################### homeScene layout ##########################
+	        
+	        VBox vb = new VBox();
+	        homePane.getChildren().add(vb);
+	        vb.setSpacing(20);
+	        
+	        Button host = new Button("Host");
+	        Button join = new Button("Join");
+	        
+	        vb.getChildren().addAll(host, join);
+	        
+	        
+	       host.setOnAction(e->{
+	    	   new GUI(true).start(new Stage());
+	    	   primaryStage.close();
+	       });
+	       
+	       join.setOnAction(e->{
+	    	   new GUI(false).start(new Stage());
+	    	   primaryStage.close();
+	       });
 	        
 
 	        primaryStage.show();
