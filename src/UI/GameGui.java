@@ -180,8 +180,12 @@ public class GameGui extends Application
 	        
 	        //save input as strings and move to homeScene
 	        loginButton.setOnAction(action -> {
-	        	String uNameInput = String.valueOf(txtUserName.getText());
-	        	String pwInput = String.valueOf(pf.getText());
+	        	String uNameInput = txtUserName.getText();
+	        	String pwInput = pf.getText();
+	        	
+	        	pw = pwInput;
+	        	user = uNameInput;
+	        	
 	        	//test with system
 	        	System.out.println(uNameInput);
 	        	System.out.println(pwInput);

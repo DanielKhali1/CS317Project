@@ -195,8 +195,8 @@ public class GUI extends Application
 					try
 					{
 						timeline.stop();
-						nme.setText("Player");
-						healthbarName.setText("Player");
+						nme.setText(username);
+						healthbarName.setText(username);
 						gamePane.getChildren().add(nme);
 						primaryStage.setTitle(isServer ? "Server: " : "Client: ");
 						
@@ -279,8 +279,8 @@ public class GUI extends Application
 					{
 						
 						
-						nme.setText("Player Client");
-						healthbarName.setText("Player Client");
+						nme.setText(username);
+						healthbarName.setText(username);
 
 						nme.setFill(Color.WHITE);
 						
