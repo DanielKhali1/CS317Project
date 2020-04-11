@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import UI.GameGui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -55,7 +56,13 @@ public class GUI extends Application
 	Image p1;
 	Image p2Heart;
 	Image p2;
-
+	
+	int enemyHealth = 3;
+	int playerHealth = 3;
+	Timeline timeline;
+	
+	String username;
+	String password;
 	/**
 	 *  PLATFOMR POSITIONS
 	 */
@@ -78,9 +85,11 @@ public class GUI extends Application
 	}
 	
 	
-	public GUI(boolean host)
+	public GUI(boolean host, String username, String password)
 	{
 		this.host = host;
+		this.username = username;
+		this.password = password;
 	}
 	
 
@@ -186,8 +195,8 @@ public class GUI extends Application
 					try
 					{
 						timeline.stop();
-						nme.setText("Player");
-						healthbarName.setText("Player");
+						nme.setText(username);
+						healthbarName.setText(username);
 						gamePane.getChildren().add(nme);
 						primaryStage.setTitle(isServer ? "Server: " : "Client: ");
 						
@@ -209,9 +218,6 @@ public class GUI extends Application
 		}
 		else
 		{
-			
-
-			
 			
 			Text title = new Text("Join");
 			title.setStyle("-fx-font-size: 30");
@@ -273,8 +279,8 @@ public class GUI extends Application
 					{
 						
 						
-						nme.setText("Player Client");
-						healthbarName.setText("Player Client");
+						nme.setText(username);
+						healthbarName.setText(username);
 
 						nme.setFill(Color.WHITE);
 						
@@ -294,9 +300,6 @@ public class GUI extends Application
 		}
 		
 		
-//		otherPlayerDisplays.add(new PlayerRect(manager.player.getWidth(), manager.player.getHeight()));
-//		otherPlayerDisplays.get(0).setFill(Color.BLUE);
-//		gamePane.getChildren().addAll(otherPlayerDisplays.get(0), otherPlayerDisplays.get(0).name);
 		gamePane.setId("gamepane");
 		
 		
@@ -404,10 +407,15 @@ public class GUI extends Application
 			}
 			if(e.getCode() == KeyCode.SPACE)
 				manager.playerJump();
-			if(e.getCode() == KeyCode.E)
+
+		});
+		scene.setOnKeyReleased(e->{
+			if(e.getCode() == KeyCode.D || e.getCode() == KeyCode.KP_RIGHT)
+				right = false;
+			if(e.getCode() == KeyCode.A || e.getCode() == KeyCode.KP_LEFT)
+				left = false;
+			if(e.getCode() == KeyCode.E || e.getCode() == KeyCode.ENTER)
 			{
-				//spawn bullet and send out bullet code.
-				//rect.setWidth(rect.getWidth() - (300/10));
 				bullets.add(new Bullet((direction) ? new Vector(manager.player.getPos().x + manager.player.getWidth() + 10, manager.player.getPos().y + manager.player.getHeight()/2) : new Vector(manager.player.getPos().x - 10, manager.player.getPos().y + manager.player.getHeight()/2), BULLET_SPEED, direction));
 				gamePane.getChildren().add(bullets.get(bullets.size()-1).getDisplay());
 				try 
@@ -416,12 +424,6 @@ public class GUI extends Application
 				}
 				catch (Exception e1) {}
 			}
-		});
-		scene.setOnKeyReleased(e->{
-			if(e.getCode() == KeyCode.D || e.getCode() == KeyCode.KP_RIGHT)
-				right = false;
-			if(e.getCode() == KeyCode.A || e.getCode() == KeyCode.KP_LEFT)
-				left = false;
 		});
 
 		
@@ -432,20 +434,89 @@ public class GUI extends Application
 		
 
 		
-		Timeline timeline = new Timeline(new KeyFrame(Duration.millis(25), (ActionEvent event) -> 
+		timeline = new Timeline(new KeyFrame(Duration.millis(25), (ActionEvent event) -> 
 		{
-
-			
 			
 			if(rect.getWidth() < 0)
 			{
+				playerHealth --;
 				rect.setWidth(300);
 				manager.player.setPos(new Vector(scene.getWidth()/2, -100));
+				switch(playerHealth)
+				{
+					case 0:
+						gamePane.getChildren().remove(life3);
+						timeline.stop();
+						Text txt = new Text(" YOU LOST ");
+						txt.setFill(Color.WHITE);
+						txt.setStyle("-fx-font-size: 50; -fx-font-weight: bold");
+						txt.relocate(400, 200);
+						Button exitbt = new Button("Exit");
+						exitbt.relocate(500,300);
+
+						gamePane.getChildren().addAll(txt, exitbt);
+						
+						exitbt.setOnAction(e->{
+							try 
+							{
+								connection.closeConnection();
+							} catch (Exception e1) {}
+							primaryStage.close();
+							
+							new GameGui(username, password).start(new Stage());
+							
+						});
+						
+						break;
+					case 1:
+						gamePane.getChildren().remove(life2);
+						break;
+					case 2:
+						gamePane.getChildren().remove(life3);
+						break;
+				}
 			}
 			
 			if(Enemyrect.getWidth() < 0)
 			{
 				Enemyrect.setWidth(300);
+				
+				enemyHealth --;
+				switch(enemyHealth)
+				{
+					case 0:
+						gamePane.getChildren().remove(Enemylife3);
+						timeline.stop();
+						Text txt = new Text(" YOU WON!!! ");
+						txt.setFill(Color.WHITE);
+						txt.setStyle("-fx-font-size: 50; -fx-font-weight: bold");
+						txt.relocate(400, 200);
+						Button exitbt = new Button("Exit");
+						exitbt.relocate(500,300);
+						
+						gamePane.getChildren().addAll(txt, exitbt);
+						
+						exitbt.setOnAction(e->{
+							try 
+							{
+								connection.closeConnection();
+							} catch (Exception e1) 
+							{
+							}
+							primaryStage.close();
+							new GameGui(username, password).start(new Stage());
+						});
+						
+						
+						
+						break;
+					case 1:
+						gamePane.getChildren().remove(Enemylife2);
+						break;
+					case 2:
+						gamePane.getChildren().remove(Enemylife3);
+						break;
+				}
 			}
 			
 			if(otherPlayerDisplays.size() > 1)
@@ -517,12 +588,6 @@ public class GUI extends Application
 			
 			p1View.setLayoutX(manager.player.getPos().x);
 			p1View.setLayoutY(manager.player.getPos().y);
-			
-//			if(otherPlayerDisplays.size() > 1)
-//			{
-//				otherPlayerDisplays.get(1).setLayoutX(otherPlayerDisplays.get(1).getLayoutX());
-//				otherPlayerDisplays.get(1).setLayoutY(otherPlayerDisplays.get(1).getLayoutY());
-//			}
 			
 		}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
