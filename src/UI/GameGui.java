@@ -1,6 +1,7 @@
 package UI;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import Game.GUI;
 import javafx.application.Application;
@@ -55,7 +56,11 @@ public class GameGui extends Application
 	        loginScene = new Scene(root, 1000, 700);
 	        //add css to login
 	    	loginScene.getStylesheets().clear();
-	    	loginScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	    	try {
+				loginScene.getStylesheets().add(f.toURI().toURL().toExternalForm());
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+			}
 	        primaryStage.setScene(loginScene);
 	        primaryStage.setTitle("Battle Royale Free for Kids");
 	        
