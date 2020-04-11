@@ -97,7 +97,7 @@ public class GUI extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-		p1 = new Image("p1.png");
+		p1 = new Image("P1.png");
 		p1Heart = new Image("P1Heart.png");	
 		p2 = new Image("P2.png");
 		p2Heart = new Image("P2Heart.png");	
