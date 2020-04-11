@@ -36,21 +36,58 @@
 	-fx-background-radius: 0;
 }
 
-.button{
-	-fx-background-color: #0033a1;
-	-fx-font-size: 20;
-	-fx-border-size: 1;
-	-fx-border-color: white;
-	-fx-text-fill: white;
+
+
+.settings{
+	-fx-graphic: url("settings.png");
+	-fx-background-color: transparent;
 }
 
-.button:hover{
-	-fx-background-color: #001c59;
-	-fx-font-size: 20;
-	-fx-border-size: 1;
-	-fx-border-color: white;
-	-fx-text-fill: white;
+.settings:hover{
+	-fx-graphic: url("settingsSelected.png");
+	-fx-background-color: transparent;
 }
+
+.profile{
+	-fx-graphic: url("profile.png");
+	-fx-background-color: transparent;
+}
+
+.profile:hover{
+	-fx-graphic: url("profileSelected.png");
+	-fx-background-color: transparent;
+}
+
+.leaderboards{
+	-fx-graphic: url("leaderboards.png");
+	-fx-background-color: transparent;
+}
+
+.leaderboards:hover{
+	-fx-graphic: url("leaderboardsSelected.png");
+	-fx-background-color: transparent;
+}
+
+.join{
+	-fx-graphic: url("join.png");
+	-fx-background-color: transparent;
+}
+
+.join:hover{
+	-fx-graphic: url("joinSelected.png");
+	-fx-background-color: transparent;
+}
+
+.host{
+	-fx-graphic: url("host.png");
+	-fx-background-color: transparent;
+}
+
+.host:hover{
+	-fx-graphic: url("hostSelected.png");
+	-fx-background-color: transparent;
+}
+
 
 
 
