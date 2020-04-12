@@ -124,7 +124,7 @@ public class GameGui extends Application
 	        
 	        //login box
 	        Rectangle log = new Rectangle(300, 200);
-	        log.setFill(Color.rgb(50, 55, 73,1));
+	        log.setFill(Color.rgb(73, 110, 136,1));
 	        log.setArcWidth(20);
 	        log.setArcHeight(20);
 	        
