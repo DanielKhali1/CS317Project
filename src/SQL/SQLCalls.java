@@ -10,21 +10,27 @@ public class SQLCalls {
    public  String DB_URL = "jdbc:mysql://127.0.0.1:3306/?user=root";
 
    //  Database credentials
-   static  String USER = "root";
-   static  String PASS = "toor";
+   static  String USER = "dkhalil";
+   static  String PASS = "0234089";
    
    String curPlayer = null;
    Connection conn = null;
    Statement stmt = null;
    
-   public SQLCalls(String ip, String port) 
+   
+   public static void main(String[] args) 
+   {
+	   SQLCalls s = new SQLCalls("mysql.us.cloudlogin.co", "3306");
+	   
+   }
+   
+   public SQLCalls(String host, String port) 
    {
         try{
         	
-        	DB_URL = "jdbc:mysql://" + ip + ":" + port  + "/?user=root";
+        	DB_URL = "jdbc:mysql://" + host + ":" + port  + "/dkhalil_cs317";
             //STEP 2: Register JDBC driver
             Class.forName("com.mysql.jdbc.Driver");
-
             //STEP 3: Open a connection
             System.out.println("Connecting to database...");
             conn = DriverManager.getConnection(DB_URL,USER,PASS);
@@ -32,26 +38,26 @@ public class SQLCalls {
             //STEP 4: Execute a query
             System.out.println("Creating statement...");
             stmt = conn.createStatement();
-            String sql;
-            sql = "SELECT id, first, last, age FROM Employees";
-            final ResultSet rs = stmt.executeQuery(sql);
+           // String sql;
+            //sql = "SELECT id, first, last, age FROM Employees";
+           // final ResultSet rs = stmt.executeQuery(sql);
 
             //STEP 5: Extract data from result set
-            while(rs.next()){
-                //Retrieve by column name
-                final int id  = rs.getInt("id");
-                final int age = rs.getInt("age");
-                final String first = rs.getString("first");
-                final String last = rs.getString("last");
-
-                //Display values
-                System.out.print("ID: " + id);
-                System.out.print(", Age: " + age);
-                System.out.print(", First: " + first);
-                System.out.println(", Last: " + last);
-            }
-            //STEP 6: Clean-up environment
-            rs.close();
+//            while(rs.next()){
+//                //Retrieve by column name
+//                final int id  = rs.getInt("id");
+//                final int age = rs.getInt("age");
+//                final String first = rs.getString("first");
+//                final String last = rs.getString("last");
+//
+//                //Display values
+//                System.out.print("ID: " + id);
+//                System.out.print(", Age: " + age);
+//                System.out.print(", First: " + first);
+//                System.out.println(", Last: " + last);
+//            }
+//            //STEP 6: Clean-up environment
+//            rs.close();
             stmt.close();
             conn.close();
         }catch(final SQLException se){
