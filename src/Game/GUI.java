@@ -599,7 +599,7 @@ public class GUI extends Application
 		return new Server(55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
 				String[] datapoints = ((String) data).split(",");
-				
+
 				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
 					
@@ -675,7 +675,7 @@ public class GUI extends Application
 		return new Client(ipAddress, 55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
 				String[] datapoints = ((String) data).split(",");
-
+				
 				
 				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
@@ -735,7 +735,7 @@ public class GUI extends Application
 				else if(datapoints.length == 1)
 				{
 					if(Double.parseDouble(datapoints[0]) == 0.1)
-					rect.setWidth(rect.getWidth() - (300/10));
+						rect.setWidth(rect.getWidth() - (300/10));
 				}
 				
 				try 
