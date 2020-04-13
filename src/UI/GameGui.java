@@ -200,11 +200,11 @@ public class GameGui extends Application
 	        	String uNameInput = txtUserName.getText();
 	        	String pwInput = pf.getText();
 	        	
-	        	if(uNameInput.length()<1) {
+	        	if(uNameInput.length()<1 || pwInput.length()<1) {
 	        		Alert alert = new Alert(AlertType.ERROR);
 	        		alert.setTitle("Error Dialog");
 	        		alert.setHeaderText("Error");
-	        		alert.setContentText("please input a username!");
+	        		alert.setContentText("please input a username and password");
 
 	        		alert.showAndWait();
 	        	}else {
@@ -239,6 +239,13 @@ public class GameGui extends Application
 	        	String uNameInput = txtUserName.getText();
 	        	String pwInput = pf.getText();
 	        	String confirmPW = confirmfield.getText();
+	        	
+	        	if(uNameInput.length() == 0) {
+	        		Alert alert = new Alert(AlertType.ERROR);
+	        		alert.setTitle("Error Dialog");
+	        		alert.setHeaderText("Error");
+	        		alert.setContentText("please input a username!");
+	        	}
 	        	
 	        	if(confirmPW.equals(confirmPW) && confirmPW.length()>0) {
 	        		homeScene.getStylesheets().clear();
