@@ -28,6 +28,11 @@ public class SQLCalls {
 	
 	public static void main(String[] args) {
 		SQLCalls s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
+		try {
+			s.getTotalKills("username1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public SQLCalls(String host, String port, String database, String User, String Pass)
@@ -91,11 +96,10 @@ public class SQLCalls {
 	}
 
 	
-	public int getTotalKills(String curPlayer, String ip, String port) throws Exception {
+	public int getTotalKills(String curPlayer) throws Exception {
 		int total_kills = 0;
 		try {
 
-			DB_URL = "jdbc:mysql://" + ip + ":" + port + "/?user=root";
 			// STEP 2: Register JDBC driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
