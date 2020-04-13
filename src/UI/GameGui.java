@@ -27,6 +27,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /* Braeden Wilson
 * CS317 Project
@@ -141,6 +143,10 @@ public class GameGui extends Application
 	        pWord.setFont(Font.font("Segoe UI Semibold", FontWeight.NORMAL, 15));
 	        pWord.setFill(Color.WHITE);
 	        PasswordField pf = new PasswordField();
+        	Text confirmpw = new Text("Confirm Password: ");
+	        confirmpw.setFont(Font.font("Segoe UI Semibold", FontWeight.NORMAL, 15));
+	        confirmpw.setFill(Color.WHITE);
+        	PasswordField confirmfield = new PasswordField();
 	        
 	        //login dropshadow
 	        DropShadow ds = new DropShadow();
@@ -166,6 +172,10 @@ public class GameGui extends Application
 	        createAcc.setMaxWidth(100);
 	        loginButton.setMaxWidth(100);
 	        loginButton.setMaxHeight(50);
+	        Button finishButton = new Button("Finish Creation");
+	        finishButton.getStyleClass().add("logbutton");
+	        finishButton.setMaxHeight(50);
+	        finishButton.setMaxWidth(150);
 	        
 	        
 	        //add login info to login gridpane
@@ -209,14 +219,27 @@ public class GameGui extends Application
 	        	log.setWidth(350);
 	        	login.getChildren().remove(createAcc);
 	        	login.getChildren().remove(loginButton);
-	        	Text confirmpw = new Text("Confirm Password: ");
-		        confirmpw.setFont(Font.font("Segoe UI Semibold", FontWeight.NORMAL, 15));
-		        confirmpw.setFill(Color.WHITE);
-	        	PasswordField confirmfield = new PasswordField();
 	        	login.add(confirmpw, 0, 2);
 	        	login.add(confirmfield, 1, 2);
-	        	login.add(loginButton, 1, 3);
+	        	login.add(finishButton, 1, 3);
 	        	
+	        });
+	        
+	        finishButton.setOnAction(action -> {
+	        	String uNameInput = txtUserName.getText();
+	        	String pwInput = pf.getText();
+	        	String confirmPW = confirmfield.getText();
+	        	
+	        	if(confirmPW == pwInput) {
+	        		primaryStage.setScene(homeScene);
+	        	}else {
+	        		Alert alert = new Alert(AlertType.ERROR);
+	        		alert.setTitle("Error Dialog");
+	        		alert.setHeaderText("Error");
+	        		alert.setContentText("Your Passwords have to match!");
+
+	        		alert.showAndWait();
+	        	}
 	        });
 	        
 	        
