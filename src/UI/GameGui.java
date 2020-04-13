@@ -200,18 +200,28 @@ public class GameGui extends Application
 	        	String uNameInput = txtUserName.getText();
 	        	String pwInput = pf.getText();
 	        	
-	        	pw = pwInput;
-	        	user = uNameInput;
+	        	if(uNameInput.length()<1) {
+	        		Alert alert = new Alert(AlertType.ERROR);
+	        		alert.setTitle("Error Dialog");
+	        		alert.setHeaderText("Error");
+	        		alert.setContentText("please input a username!");
+
+	        		alert.showAndWait();
+	        	}else {
+		        	pw = pwInput;
+		        	user = uNameInput;
+		        	
+		        	//test with system
+		        	System.out.println(uNameInput);
+		        	System.out.println(pwInput);
+		        	
+		        	//test user/password, change scene
+		        	
+			        homeScene.getStylesheets().clear();
+			        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+		        	primaryStage.setScene(homeScene);
+	        	}
 	        	
-	        	//test with system
-	        	System.out.println(uNameInput);
-	        	System.out.println(pwInput);
-	        	
-	        	//test user/password, change scene
-	        	
-		        homeScene.getStylesheets().clear();
-		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        	primaryStage.setScene(homeScene);
 	        });
 	        
 	        createAcc.setOnAction(action -> {
@@ -230,7 +240,9 @@ public class GameGui extends Application
 	        	String pwInput = pf.getText();
 	        	String confirmPW = confirmfield.getText();
 	        	
-	        	if(confirmPW == pwInput) {
+	        	if(confirmPW.equals(confirmPW) && confirmPW.length()>0) {
+	        		homeScene.getStylesheets().clear();
+			        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        		primaryStage.setScene(homeScene);
 	        	}else {
 	        		Alert alert = new Alert(AlertType.ERROR);
