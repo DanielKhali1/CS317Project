@@ -159,7 +159,11 @@ public class GameGui extends Application
 	        
 	        
 	        Button loginButton = new Button("Login!");
+	        Button createAcc = new Button("Create Account");
+	        createAcc.getStyleClass().add("createAcc");
 	        loginButton.getStyleClass().add("logbutton");
+	        createAcc.setMaxHeight(50);
+	        createAcc.setMaxWidth(100);
 	        loginButton.setMaxWidth(100);
 	        loginButton.setMaxHeight(50);
 	        
@@ -170,6 +174,7 @@ public class GameGui extends Application
 	        login.add(pWord, 0, 1);
 	        login.add(pf, 1, 1);
 	        login.add(loginButton, 1, 2);
+	        login.add(createAcc, 1, 3);
 	        
 	        //login fire on enter press (need to focus button first)
 	        loginButton.addEventHandler(KeyEvent.KEY_PRESSED, ev->{
@@ -178,6 +183,7 @@ public class GameGui extends Application
 	        		ev.consume();
 	        	}
 	        });
+	        
 	        
 	        //save input as strings and move to homeScene
 	        loginButton.setOnAction(action -> {
@@ -196,6 +202,21 @@ public class GameGui extends Application
 		        homeScene.getStylesheets().clear();
 		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        	primaryStage.setScene(homeScene);
+	        });
+	        
+	        createAcc.setOnAction(action -> {
+	        	log.setHeight(250);
+	        	log.setWidth(350);
+	        	login.getChildren().remove(createAcc);
+	        	login.getChildren().remove(loginButton);
+	        	Text confirmpw = new Text("Confirm Password: ");
+		        confirmpw.setFont(Font.font("Segoe UI Semibold", FontWeight.NORMAL, 15));
+		        confirmpw.setFill(Color.WHITE);
+	        	PasswordField confirmfield = new PasswordField();
+	        	login.add(confirmpw, 0, 2);
+	        	login.add(confirmfield, 1, 2);
+	        	login.add(loginButton, 1, 3);
+	        	
 	        });
 	        
 	        
