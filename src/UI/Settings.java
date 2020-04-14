@@ -11,7 +11,8 @@ import java.io.File;
 
 public class Settings extends Application 
 {
-	
+	String username;
+	String pass;
 	Scene setScene;
 
 	@Override
@@ -29,7 +30,7 @@ public class Settings extends Application
         setPane.getChildren().add(back);
         
         back.setOnAction(e -> {
-        	new GameGui().start(new Stage());
+        	new GameGui(username,pass).start(new Stage());
         	primaryStage.close();
         });
         
@@ -40,6 +41,16 @@ public class Settings extends Application
 	
     public static void main(String[] args) {
 		launch(args);
+	}
+    
+    public Settings() {
+    	
+    }
+    
+	public Settings(String username, String pass)
+	{
+		this.username = username;
+		this.pass = pass;
 	}
 
 }

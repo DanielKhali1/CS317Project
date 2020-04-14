@@ -11,7 +11,8 @@ import java.io.File;
 
 public class Profile extends Application 
 {
-	
+	String username;
+	String pass;
 	Scene profileScene;
 
 	@Override
@@ -29,7 +30,7 @@ public class Profile extends Application
         profilePane.getChildren().add(back);
         
         back.setOnAction(e -> {
-        	new GameGui().start(new Stage());
+        	new GameGui(username,pass).start(new Stage());
         	primaryStage.close();
         });
         
@@ -41,6 +42,16 @@ public class Profile extends Application
 	
     public static void main(String[] args) {
 		launch(args);
+	}
+    
+    
+    public Profile() {
+    	
+    }
+	public Profile(String username, String pass)
+	{
+		this.username = username;
+		this.pass = pass;
 	}
 
 }
