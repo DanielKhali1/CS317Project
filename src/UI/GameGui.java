@@ -4,7 +4,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Optional;
-
+import UI.Profile;
+import UI.Settings;
 import Game.GUI;
 import SQL.SQLCalls;
 import javafx.application.Application;
@@ -18,10 +19,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -48,6 +47,9 @@ public class GameGui extends Application
 { 
 	Scene loginScene;
 	Scene homeScene;
+	Scene profileScene;
+	Scene setScene;
+	Scene leadScene;
 	String user = "Test";
 	String pw = "Test";
 	
@@ -105,8 +107,8 @@ public class GameGui extends Application
 	        	primaryStage.setScene(homeScene);	
 	        }
 	        
-	        Button host = new Button("Host");
-	        Button join = new Button("Join");
+	        Button host = new Button();
+	        Button join = new Button();
 	        host.getStyleClass().add("host");
 	        join.getStyleClass().add("join");
 	        HBox play = new HBox();
@@ -114,16 +116,20 @@ public class GameGui extends Application
 	        play.setAlignment(Pos.BASELINE_CENTER);
 	        homePane.setBottom(play);
 
-	       host.setOnAction(e->{
-	    	   new GUI(true, user,pw).start(new Stage());
-	    	   primaryStage.close();
-	       });
-	       
-	       join.setOnAction(e->{
-	    	   new GUI(false,user,pw).start(new Stage());
-	    	   primaryStage.close();
-	       });
+	        //settings page
+	        BorderPane setPane = new BorderPane();
+	        setPane.setId("pane");
+	        setScene = new Scene(setPane, 1000, 700);
+	        setScene.getStylesheets().clear();
+        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        
+	        //Leaderboard page
+	        BorderPane leadPane = new BorderPane();
+	        leadPane.setId("pane");
+	        leadScene = new Scene(leadPane, 1000, 700);
+	        leadScene.getStylesheets().clear();
+        	leadScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+
 	        //######################## login layout ########################################
 	        
 	        //title text
@@ -330,7 +336,31 @@ public class GameGui extends Application
 	    	   new GUI(false, user, pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
-	        
+	       
+	       profile.setOnAction(e -> {
+				try {
+					new Profile().start(new Stage());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	    	   primaryStage.close();
+	       });
+	       
+	       settings.setOnAction(e -> {
+	    	   try {
+				new Settings().start(new Stage());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	    	   primaryStage.close();
+	       });
+	       
+	       leader.setOnAction(e -> {
+	    	   primaryStage.setScene(leadScene);
+	       });
+
 
 	        primaryStage.show();
 	    }
