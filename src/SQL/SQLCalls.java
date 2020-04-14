@@ -824,7 +824,7 @@ public class SQLCalls {
 		ArrayList<String[]> leaderboard = new ArrayList<String[]>();
 		
 		
-		String sql = "SELECT Username,Kills,Deaths,Wins,Losses,totalPlayTime FROM (Player NATURAL JOIN TimeStats) ORDER BY Wins ASC;";
+		String sql = "SELECT Username,Kills,Deaths,Wins,Losses,totalPlayTime FROM (Player NATURAL JOIN TimeStats) ORDER BY Wins DESC;";
 		
 		try {
 
