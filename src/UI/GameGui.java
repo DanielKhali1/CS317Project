@@ -4,7 +4,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Optional;
-
+import UI.Profile;
+import UI.Settings;
 import Game.GUI;
 import SQL.SQLCalls;
 import javafx.application.Application;
@@ -18,10 +19,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -116,14 +115,7 @@ public class GameGui extends Application
 	        play.getChildren().addAll(join, host);
 	        play.setAlignment(Pos.BASELINE_CENTER);
 	        homePane.setBottom(play);
-	        
-	        //profile page
-	        BorderPane profilePane = new BorderPane();
-	        profilePane.setId("pane");
-	        profileScene = new Scene(profilePane, 1000, 700);
-	        profileScene.getStylesheets().clear();
-        	profileScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        
+
 	        //settings page
 	        BorderPane setPane = new BorderPane();
 	        setPane.setId("pane");
@@ -346,21 +338,29 @@ public class GameGui extends Application
 	       });
 	       
 	       profile.setOnAction(e -> {
-	    	   primaryStage.setScene(profileScene);
+				try {
+					new Profile().start(new Stage());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	    	   primaryStage.close();
 	       });
 	       
 	       settings.setOnAction(e -> {
-	    	   primaryStage.setScene(setScene);
+	    	   try {
+				new Settings().start(new Stage());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	    	   primaryStage.close();
 	       });
 	       
 	       leader.setOnAction(e -> {
 	    	   primaryStage.setScene(leadScene);
 	       });
-	       
-	       //################################### profile page #############################
-	        
-	       
-	       
+
 
 	        primaryStage.show();
 	    }
