@@ -1,5 +1,6 @@
 package UI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -7,6 +8,9 @@ import SQL.SQLCalls;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -19,17 +23,17 @@ public class LeaderBoards extends Application
 	Button cells[][];
 	SQLCalls s;
 	
-	double WIDTH_RANK = 60;
-	double WIDTH_USERNAME= 100;
-	double WIDTH_KD= 60;
-	double WIDTH_WL= 60;
-	double WIDTH_KILLS= 60;
-	double WIDTH_DEATHS= 60;
-	double WIDTH_WINS= 60;
-	double WIDTH_LOSSES= 60;
-	double WIDTH_TIMEPLAYED= 80 ;
+	double WIDTH_RANK = 100;
+	double WIDTH_USERNAME= 150;
+	double WIDTH_KD= 100;
+	double WIDTH_WL= 100;
+	double WIDTH_KILLS= 100;
+	double WIDTH_DEATHS= 100;
+	double WIDTH_WINS= 100;
+	double WIDTH_LOSSES= 100;
+	double WIDTH_TIMEPLAYED= 150 ;
 	
-	double height = 30;
+	double height = 45;
 	
 	public LeaderBoards(String username)
 	{
@@ -38,12 +42,40 @@ public class LeaderBoards extends Application
 	
 	public LeaderBoards()
 	{
-		this.username = "TEST";
+		this.username = "Danny";
 	}
 	
 	@Override
 	public void start(Stage primaryStage)
 	{
+		scene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
+		pane.setId("pane");
+		Pane leaderboardPane = new Pane();
+		ScrollPane sp = new ScrollPane(leaderboardPane);
+		sp.relocate(120, 100);
+
+		Image back = new Image("back-button.png");
+		ImageView backbtn = new ImageView(back);
+		backbtn.relocate(20, 20);
+		backbtn.setFitHeight(75);
+		backbtn.setFitWidth(75);
+		
+		backbtn.setOnMouseEntered(e->{
+			
+			backbtn.setFitHeight(80);
+			backbtn.setFitWidth(80);
+			backbtn.setLayoutX(17);
+			backbtn.setLayoutY(17);
+		});
+		backbtn.setOnMouseExited(e->{
+			backbtn.setLayoutX(20);
+			backbtn.setLayoutY(20);
+			backbtn.setFitHeight(75);
+			backbtn.setFitWidth(75);
+		});
+		
+		pane.getChildren().add(backbtn);
+		
 		s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 		ArrayList<String[]> sqlGrab = s.getLeaderBoard();
 		String titles[] = {"Username","Kills","Deaths","Wins","Losses","TimePlayed"};
@@ -63,8 +95,8 @@ public class LeaderBoards extends Application
 			}
 			else
 			{
-				cells[i][0] = new Button((i+1)+"");
-				cells[i][2] = new Button(	(Double.parseDouble(sqlGrab.get(i)[2]) == 0)? 0+"": (Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]) )+"");
+				cells[i][0] = new Button((i)+"");
+				cells[i][2] = new Button((Double.parseDouble(sqlGrab.get(i)[2]) == 0)? 0+"": (Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]) )+"");
 				cells[i][3] = new Button((Double.parseDouble(sqlGrab.get(i)[4]) == 0)? 0+"": (Double.parseDouble(sqlGrab.get(i)[3])/Double.parseDouble(sqlGrab.get(i)[4]))+"");
 				
 			}
@@ -94,19 +126,34 @@ public class LeaderBoards extends Application
 			cells[i][7].relocate(cells[i][0].getPrefWidth()+cells[i][1].getPrefWidth()+ cells[i][2].getPrefWidth() + cells[i][3].getPrefWidth() + cells[i][4].getPrefWidth() + cells[i][5].getPrefWidth() + cells[i][6].getPrefWidth(), i*height);
 			cells[i][8].relocate(cells[i][0].getPrefWidth()+cells[i][1].getPrefWidth()+ cells[i][2].getPrefWidth() + cells[i][3].getPrefWidth() + cells[i][4].getPrefWidth() + cells[i][5].getPrefWidth() + cells[i][6].getPrefWidth() + cells[i][7].getPrefWidth(), i*height);
 			
-			pane.getChildren().addAll(cells[i]);
+			leaderboardPane.getChildren().addAll(cells[i]);
 		}
 		
 		for(int i = 0; i < cells.length; i++)
 		{
 			for(int j = 0; j < cells[0].length; j++)
 			{
-				//cells[i][j].setStyle("-fx-background-color: #5a9ccc;");
+				if(i == 0)
+				{
+					cells[i][j].setStyle("-fx-background-color: #2d5775; -fx-font-weight: bold; -fx-font-size: 20; -fx-border-color:black; -fx-text-fill: white");
+				}
+				else if(j == 0)
+				{
+					cells[i][j].setStyle("-fx-background-color: #87c3ed; -fx-font-size: 20; -fx-border-color:black; -fx-font-weight: bold;");
+				}
+				else if(cells[i][1].getText().equals(username))
+				{
+					cells[i][j].setStyle("-fx-background-color: #a6daff; -fx-font-size: 20; -fx-border-color:black;-fx-text-fill: black;");
+				}
+				else
+				{
+					cells[i][j].setStyle("-fx-background-color: #87c3ed; -fx-font-size: 20; -fx-border-color:black;");
+				}
 			}
 		}
 		
 		
-		
+		pane.getChildren().add(sp);
 		
 		primaryStage.setScene(scene);
 		primaryStage.show();
