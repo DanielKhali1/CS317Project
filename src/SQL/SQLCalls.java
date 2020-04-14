@@ -43,6 +43,8 @@ public class SQLCalls {
 			
 //			s.removeRecord("Danny");
 //			s.setLosses("Doopy", 69);
+			System.out.println(s.getTotalWins("Danny"));
+			System.out.println(s.getTotalLosses("Danny"));
 	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -765,6 +767,110 @@ public class SQLCalls {
 		return avgMatchLength;
 	}
 
+	public int getTotalLosses(String curPlayer) throws Exception
+	{
+		int losses = 0;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Losses FROM Player WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			losses = rs.getInt("Losses");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return losses;
+	}
+	
+	public int getTotalWins(String curPlayer) throws Exception
+	{
+		int wins = 0;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Wins FROM Player WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			wins = rs.getInt("Wins");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return wins;
+	}
+	
 	public ArrayList<String> getAllUsernames()
 	{
 		

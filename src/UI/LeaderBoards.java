@@ -13,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LeaderBoards extends Application
@@ -20,6 +22,7 @@ public class LeaderBoards extends Application
 	Pane pane = new Pane();
 	Scene scene = new Scene(pane, 1280, 720);
 	String username;
+	String pass;
 	Button cells[][];
 	SQLCalls s;
 	
@@ -35,9 +38,10 @@ public class LeaderBoards extends Application
 	
 	double height = 45;
 	
-	public LeaderBoards(String username)
+	public LeaderBoards(String username, String pass)
 	{
 		this.username = username;
+		this.pass = pass;
 	}
 	
 	public LeaderBoards()
@@ -52,8 +56,16 @@ public class LeaderBoards extends Application
 		pane.setId("pane");
 		Pane leaderboardPane = new Pane();
 		ScrollPane sp = new ScrollPane(leaderboardPane);
-		sp.relocate(120, 100);
-
+		sp.setPrefHeight(500);
+		sp.relocate(120, 150);
+		sp.setStyle("-fx-background-color: black");
+		
+		Text title = new Text("Rankings");
+		title.relocate(500, 80);
+		title.setStyle("-fx-font-size: 60;");
+		title.setFill(Color.WHITE);
+		pane.getChildren().add(title);
+		
 		Image back = new Image("back-button.png");
 		ImageView backbtn = new ImageView(back);
 		backbtn.relocate(20, 20);
@@ -72,6 +84,11 @@ public class LeaderBoards extends Application
 			backbtn.setLayoutY(20);
 			backbtn.setFitHeight(75);
 			backbtn.setFitWidth(75);
+		});
+		
+		backbtn.setOnMouseClicked(e->{
+			new GameGui(username,pass).start(new Stage());
+			primaryStage.close();
 		});
 		
 		pane.getChildren().add(backbtn);

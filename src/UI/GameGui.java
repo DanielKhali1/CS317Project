@@ -36,15 +36,15 @@ import javafx.scene.control.Alert.AlertType;
 /* Braeden Wilson
 * CS317 Project
 * 3/31/2020
-* 
+*
 * Battle Royale For Kids Free
 * GUI creator
-* 
+*
 */
 
 
 public class GameGui extends Application
-{ 
+{
 	Scene loginScene;
 	Scene homeScene;
 	Scene profileScene;
@@ -52,11 +52,11 @@ public class GameGui extends Application
 	Scene leadScene;
 	String user = "Test";
 	String pw = "Test";
-	
+
 	SQLCalls s;
-	
+
 	private boolean alreadyLogged = false;
-	
+
 		public GameGui(String user, String pw)
 		{
 			this.user = user;
@@ -67,11 +67,11 @@ public class GameGui extends Application
 		{
 			alreadyLogged = false;
 		}
-	
+
 	    @Override
-	    public void start(Stage primaryStage) 
+	    public void start(Stage primaryStage)
 	    {
-	    	
+
 			s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 
 	    	//set css file
@@ -88,25 +88,25 @@ public class GameGui extends Application
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			}
-	    	
+
 	        //home scene
 	        BorderPane homePane = new BorderPane();
 	        homePane.setId("pane");
 	        homeScene = new Scene(homePane, 1000, 700);
-	        
+
 	        if(!alreadyLogged)
 	        {
 	        	primaryStage.setScene(loginScene);
 	        	primaryStage.setTitle("Battle Royale Free for Kids");
-	        	
+
 	        }
 	        else
 	        {
 	        	homeScene.getStylesheets().clear();
 	        	homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        	primaryStage.setScene(homeScene);	
+	        	primaryStage.setScene(homeScene);
 	        }
-	        
+
 	        Button host = new Button();
 	        Button join = new Button();
 	        host.getStyleClass().add("host");
@@ -116,9 +116,16 @@ public class GameGui extends Application
 	        play.setAlignment(Pos.BASELINE_CENTER);
 	        homePane.setBottom(play);
 
+	        //settings page
+	        BorderPane setPane = new BorderPane();
+	        setPane.setId("pane");
+	        setScene = new Scene(setPane, 1000, 700);
+	        setScene.getStylesheets().clear();
+        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+
 
 	        //######################## login layout ########################################
-	        
+
 	        //title text
 	        Text title = new Text("BATTLE ROYALE FREE FOR KIDS");
 	        title.setId("titleText");
@@ -126,13 +133,13 @@ public class GameGui extends Application
 	        VBox Titlebox = new VBox(100, title);
 	        Titlebox.setAlignment(Pos.TOP_CENTER);
 	        Titlebox.setPadding(new Insets(50,0,0,0));
-	        
+
 	        //login box
 	        Rectangle log = new Rectangle(300, 200);
 	        log.setFill(Color.rgb(73, 110, 136,1));
 	        log.setArcWidth(20);
 	        log.setArcHeight(20);
-	        
+
 	        //textfields and buttons
 	        GridPane login = new GridPane();
 	        login.setAlignment(Pos.CENTER);
@@ -150,7 +157,7 @@ public class GameGui extends Application
 	        confirmpw.setFont(Font.font("Segoe UI Semibold", FontWeight.NORMAL, 15));
 	        confirmpw.setFill(Color.WHITE);
         	PasswordField confirmfield = new PasswordField();
-	        
+
 	        //login dropshadow
 	        DropShadow ds = new DropShadow();
 	        ds.setBlurType(BlurType.GAUSSIAN);
@@ -165,8 +172,8 @@ public class GameGui extends Application
 	        root.getChildren().add(log);
 	        root.getChildren().add(Titlebox);
 	        root.getChildren().add(login);
-	        
-	        
+
+
 	        Button loginButton = new Button("Login!");
 	        Button createAcc = new Button("Create Account");
 	        createAcc.getStyleClass().add("createAcc");
@@ -179,8 +186,8 @@ public class GameGui extends Application
 	        finishButton.getStyleClass().add("logbutton");
 	        finishButton.setMaxHeight(50);
 	        finishButton.setMaxWidth(150);
-	        
-	        
+
+
 	        //add login info to login gridpane
 	        login.add(uName, 0,0);
 	        login.add(txtUserName, 1, 0);
@@ -188,7 +195,7 @@ public class GameGui extends Application
 	        login.add(pf, 1, 1);
 	        login.add(loginButton, 1, 2);
 	        login.add(createAcc, 1, 3);
-	        
+
 	        //login fire on enter press (need to focus button first)
 	        loginScene.setOnKeyReleased(e->{
 	        	if(e.getCode() == KeyCode.ENTER)
@@ -196,13 +203,13 @@ public class GameGui extends Application
 		        	loginAction(txtUserName.getText(), pf.getText(), primaryStage,f);
 	        	}
 	        });
-	        
-	        
+
+
 	        //save input as strings and move to homeScene
 	        loginButton.setOnAction(action -> {
 	        	loginAction(txtUserName.getText(), pf.getText(), primaryStage, f);
 	        });
-	        
+
 	        createAcc.setOnAction(action -> {
 	        	log.setHeight(250);
 	        	log.setWidth(350);
@@ -211,18 +218,18 @@ public class GameGui extends Application
 	        	login.add(confirmpw, 0, 2);
 	        	login.add(confirmfield, 1, 2);
 	        	login.add(finishButton, 1, 3);
-	        	
+
 	        });
-	        
+
 	        finishButton.setOnAction(action -> {
 	        	String uNameInput = txtUserName.getText();
 	        	String pwInput = pf.getText();
 	        	String confirmPW = confirmfield.getText();
 
 	        	ArrayList<String> users = s.getAllUsernames();
-	        	
+
 	        	boolean bad = false;
-	        	
+
 	        	for(int i = 0; i < users.size(); i++)
 	        	{
 	        		if(uNameInput.equals(users.get(i)))
@@ -231,7 +238,7 @@ public class GameGui extends Application
 	        			break;
 	        		}
 	        	}
-	        	
+
 	        	if(bad)
 	        	{
         			Alert alert = new Alert(AlertType.ERROR);
@@ -256,51 +263,51 @@ public class GameGui extends Application
 	        	else
 	        	{
 	        		s.newRecord(uNameInput, pwInput);
-	        		
+
 	        		Alert alert = new Alert(AlertType.INFORMATION);
 	        		alert.setTitle("Success");
 	        		alert.setHeaderText("Successfully Created a new Acccount");
 	        		Optional<ButtonType> result = alert.showAndWait();
-	        		
+
 	        		System.out.println("alert should be shown");
-	        		
+
 	        		if(result.get() == ButtonType.OK)
 	        		{
 	        			pw = pwInput;
 			        	user = uNameInput;
-			        	
+
 			        	//test with system
 			        	System.out.println(uNameInput);
 			        	System.out.println(pwInput);
-			        	
+
 			        	//test user/password, change scene
-			        	
+
 				        homeScene.getStylesheets().clear();
 				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 			        	primaryStage.setScene(homeScene);
 	        		}
-	        		
+
 	        		alert.setOnCloseRequest(e->{
 	        			pw = pwInput;
 			        	user = uNameInput;
-			        	
+
 			        	//test with system
 			        	System.out.println(uNameInput);
 			        	System.out.println(pwInput);
-			        	
+
 			        	//test user/password, change scene
-			        	
+
 				        homeScene.getStylesheets().clear();
 				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 			        	primaryStage.setScene(homeScene);
 	        		});
-	        		
-	        		
+
+
 	        	}
-	        	
+
 	        });
-	        
-	        
+
+
 	        //########################### homeScene layout ##########################
 	        homePane.setPadding(new Insets(30,20,20,20));
 	        HBox hometiles = new HBox();
@@ -313,17 +320,17 @@ public class GameGui extends Application
 	        hometiles.getChildren().addAll(settings, profile, leader);
 	        homePane.setCenter(hometiles);
 
-	        
+
 	       host.setOnAction(e->{
 	    	   new GUI(true, user, pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
-	       
+
 	       join.setOnAction(e->{
 	    	   new GUI(false, user, pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
-	       
+
 	       profile.setOnAction(e -> {
 				try {
 					new Profile().start(new Stage());
@@ -333,7 +340,7 @@ public class GameGui extends Application
 				}
 	    	   primaryStage.close();
 	       });
-	       
+
 	       settings.setOnAction(e -> {
 	    	   try {
 				new Settings().start(new Stage());
@@ -343,26 +350,27 @@ public class GameGui extends Application
 			}
 	    	   primaryStage.close();
 	       });
-	       
+
 	       leader.setOnAction(e -> {
-	    	   primaryStage.setScene(leadScene);
+	    	   new LeaderBoards(user,pw).start(new Stage());
+	    	   primaryStage.close();
 	       });
 
 
 	        primaryStage.show();
 	    }
-	    
+
 	    public static void main(String[] args) {
 			launch(args);
 		}
-	    
+
 	    public void loginAction(String user, String pass, Stage primaryStage, File f)
 	    {
         	String uNameInput = user;
         	String pwInput = pass;
-        	
+
         	boolean unlock = false;
-        	
+
         	try{
         		unlock = s.getPassword(uNameInput).equals(pwInput);
         	}
@@ -370,8 +378,8 @@ public class GameGui extends Application
         	{
         		System.out.println("Error connecting to database");
         	}
-        	
-        	
+
+
         	if(uNameInput.length()<1 || pwInput.length()<1) {
         		Alert alert = new Alert(AlertType.ERROR);
         		alert.setTitle("Error Dialog");
@@ -382,15 +390,15 @@ public class GameGui extends Application
         	}
         	else if(unlock)
         	{
-	        	pw = pwInput;
-	        	user = uNameInput;
-	        	
+	        	this.pw = pwInput;
+	        	this.user = uNameInput;
+
 	        	//test with system
 	        	System.out.println(uNameInput);
 	        	System.out.println(pwInput);
-	        	
+
 	        	//test user/password, change scene
-	        	
+
 		        homeScene.getStylesheets().clear();
 		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        	primaryStage.setScene(homeScene);
