@@ -48,6 +48,9 @@ public class GameGui extends Application
 { 
 	Scene loginScene;
 	Scene homeScene;
+	Scene profileScene;
+	Scene setScene;
+	Scene leadScene;
 	String user = "Test";
 	String pw = "Test";
 	
@@ -105,25 +108,36 @@ public class GameGui extends Application
 	        	primaryStage.setScene(homeScene);	
 	        }
 	        
-	        Button host = new Button("Host");
-	        Button join = new Button("Join");
+	        Button host = new Button();
+	        Button join = new Button();
 	        host.getStyleClass().add("host");
 	        join.getStyleClass().add("join");
 	        HBox play = new HBox();
 	        play.getChildren().addAll(join, host);
 	        play.setAlignment(Pos.BASELINE_CENTER);
 	        homePane.setBottom(play);
-
-	       host.setOnAction(e->{
-	    	   new GUI(true, user,pw).start(new Stage());
-	    	   primaryStage.close();
-	       });
-	       
-	       join.setOnAction(e->{
-	    	   new GUI(false,user,pw).start(new Stage());
-	    	   primaryStage.close();
-	       });
 	        
+	        //profile page
+	        BorderPane profilePane = new BorderPane();
+	        profilePane.setId("pane");
+	        profileScene = new Scene(profilePane, 1000, 700);
+	        profileScene.getStylesheets().clear();
+        	profileScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        
+	        //settings page
+	        BorderPane setPane = new BorderPane();
+	        setPane.setId("pane");
+	        setScene = new Scene(setPane, 1000, 700);
+	        setScene.getStylesheets().clear();
+        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        
+	        //Leaderboard page
+	        BorderPane leadPane = new BorderPane();
+	        leadPane.setId("pane");
+	        leadScene = new Scene(leadPane, 1000, 700);
+	        leadScene.getStylesheets().clear();
+        	leadScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+
 	        //######################## login layout ########################################
 	        
 	        //title text
@@ -330,7 +344,23 @@ public class GameGui extends Application
 	    	   new GUI(false, user, pw).start(new Stage());
 	    	   primaryStage.close();
 	       });
+	       
+	       profile.setOnAction(e -> {
+	    	   primaryStage.setScene(profileScene);
+	       });
+	       
+	       settings.setOnAction(e -> {
+	    	   primaryStage.setScene(setScene);
+	       });
+	       
+	       leader.setOnAction(e -> {
+	    	   primaryStage.setScene(leadScene);
+	       });
+	       
+	       //################################### profile page #############################
 	        
+	       
+	       
 
 	        primaryStage.show();
 	    }
