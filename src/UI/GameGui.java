@@ -116,19 +116,6 @@ public class GameGui extends Application
 	        play.setAlignment(Pos.BASELINE_CENTER);
 	        homePane.setBottom(play);
 
-	        //settings page
-	        BorderPane setPane = new BorderPane();
-	        setPane.setId("pane");
-	        setScene = new Scene(setPane, 1000, 700);
-	        setScene.getStylesheets().clear();
-        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        
-	        //Leaderboard page
-	        BorderPane leadPane = new BorderPane();
-	        leadPane.setId("pane");
-	        leadScene = new Scene(leadPane, 1000, 700);
-	        leadScene.getStylesheets().clear();
-        	leadScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 
 	        //######################## login layout ########################################
 	        

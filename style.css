@@ -106,6 +106,16 @@
 	-fx-cursor:hand;
 }
 
+.backarrow{
+	-fx-graphic: url("backarrow.png");
+	-fx-background-color: transparent;
+}
+
+.backarrow:hover{
+	-fx-graphic: url("backarrowSelected.png");
+	-fx-background-color: transparent;
+	-fx-cursor: hand;
+}
 
 
 
