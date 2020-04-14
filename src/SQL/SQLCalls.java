@@ -1,186 +1,1000 @@
 //STEP 1. Import required packages
 package SQL;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SQLCalls {
-   // JDBC driver name and database URL
-	public  String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-   public  String DB_URL = "jdbc:mysql://127.0.0.1:3306/?user=root";
+	// JDBC driver name and database URL
+	public String DB_URL = "jdbc:mysql://localhost:3306/players";
 
-   //  Database credentials
-   static  String USER = "root";
-   static  String PASS = "toor";
-   
-   String curPlayer = null;
-   Connection conn = null;
-   Statement stmt = null;
-   
-   public SQLCalls(String ip, String port) 
-   {
-        try{
-        	
-        	DB_URL = "jdbc:mysql://" + ip + ":" + port  + "/?user=root";
-            //STEP 2: Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
+	// Database credentials
+	String USER = "root";
+	String PASS = "toor";
 
-            //STEP 3: Open a connection
-            System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+	Connection conn = null;
+	Statement stmt = null;
 
-            //STEP 4: Execute a query
-            System.out.println("Creating statement...");
-            stmt = conn.createStatement();
-            String sql;
-            sql = "SELECT id, first, last, age FROM Employees";
-            final ResultSet rs = stmt.executeQuery(sql);
+	/*
+	 * Time format for gameplay stats (maybe might need to use if we change from
+	 * double to time stats, shouldn't be a big deal to change in the code)
+	 * 
+	 * DateTimeFormatter gameplayFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+	 */
+	
+	public static void main(String[] args) {
+		SQLCalls s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
+		try {
+//			System.out.println("Total Deaths: " + s.getTotalDeaths("username1"));
+//			System.out.println("Total Kills: " + s.getTotalKills("username1"));
+//			System.out.println("Display Name: " + s.getDisplayName("username1"));
+//			System.out.println("Password: " + s.getPassword("username1"));
+//			System.out.println("Admin: " + s.getAdminStatus("username1"));
+//			
+//			System.out.println("Average Life Span: " + s.getAvgLifespan("username1"));
+//			System.out.println("Total Time Played " + s.getTotalTimePlayed("username1"));
+//			System.out.println("Amount of Days Played: " + s.getDaysPlayed("username1"));
+//			System.out.println("Average Match Length: " + s.getAvgMatchLength("username1"));
+			
+//			s.removeRecord("Moo");
+//			s.setLosses("Doopy", 69);
+//			System.out.println(s.getTotalWins("Danny"));
+//			System.out.println(s.getTotalLosses("Danny"));
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-            //STEP 5: Extract data from result set
-            while(rs.next()){
-                //Retrieve by column name
-                final int id  = rs.getInt("id");
-                final int age = rs.getInt("age");
-                final String first = rs.getString("first");
-                final String last = rs.getString("last");
+	
+	public SQLCalls(String host, String port, String database, String User, String Pass)
+	{
+		this.USER = User;
+		this.PASS = Pass;
+		DB_URL = "jdbc:mysql://"+ host + ":" + port +  "/" + database + "?user=" + this.USER + "&password=" + PASS + "&useUnicode=true&characterEncoding=UTF-8";
+	}
 
-                //Display values
-                System.out.print("ID: " + id);
-                System.out.print(", Age: " + age);
-                System.out.print(", First: " + first);
-                System.out.println(", Last: " + last);
-            }
-            //STEP 6: Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        }catch(final SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(final Exception e){
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(stmt!=null)
-                    stmt.close();
-            }catch(final SQLException se2){
-            }// nothing we can do
-            try{
-                if(conn!=null)
-                    conn.close();
-            }catch(final SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
-    System.out.println("Goodbye!");
-    }//end main
+	public SQLCalls()
+	{
+		DB_URL = "jdbc:mysql://localhost:3306/players";
+		USER = "root";
+		PASS = "toor";
+	}
 
-    //Time format for gameplay stats (maybe might need to use if we change from double to time stats, shouldn't be a big deal to change in the code)
-    //DateTimeFormatter gameplayFormat = DateTimeFormatter.ofPattern("HH:mm:ss"); 
+	// add new record
+	public void newRecord(String username, String password)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "INSERT INTO Player(Username, displayName, Deaths, Kills) VALUES ('" + username + "','" + username + "','0','0');"; 
+			stmt.executeUpdate(sql);
+			sql = "INSERT INTO Account(Username, Password, Admin) VALUES ('" + username + "','" + password + "','0');"; 
+			stmt.executeUpdate(sql);
+			sql = "INSERT INTO TimeStats(Username, avgLifespan, totalPlayTime, daysPlayed, avgMatchLength) VALUES ('" + username + "', '0','0','0','0');";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}			
+	}
 
-    //Player Entity Queries
-    int getTotalKills(String curPlayer)  throws Exception{
-        int total_kills;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT Kills FROM Player WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        total_kills = rs.getInt("Kills");
-        return total_kills;
-    }
+	// remove record
+	public void removeRecord(String username)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "DELETE FROM Player WHERE Username = '" + username + "'"; 
+			stmt.executeUpdate(sql);
+			sql = "DELETE FROM Account WHERE Username = '" + username + "'"; 
+			stmt.executeUpdate(sql);
+			sql = "DELETE FROM TimeStats WHERE Username = '" + username + "'"; 
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}	
+	}
+	
+	//update certain attributes
+	public void setTotalKills(String curPlayer, int kills)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Player SET Kills = " + kills + " WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}
+	}
+	
+	public void setTotalDeaths(String curPlayer, int deaths)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Player SET Deaths = " + deaths + " WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}
+	}
+	
+	public void setDisplayName(String curPlayer, String displayName) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Player SET displayName = '" + displayName + "' WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}
+	}
+	
+	public void setPassword(String curPlayer, String password) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Account SET Password = '" + password + "' WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}
+	}
+	
+	public void setAdminStatus(String curPlayer, boolean Admin) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Account SET Admin = '" +  ( (Admin)? 1 : 0 ) + "' WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}		
+	}
+	
+	public void setTotalTimePlayed(String curPlayer, double totalTimePlayed) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE TimeStats SET totalPlayTime = '" +  totalTimePlayed + "' WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}			
+	}
+	
+	public void setAvgLifeSpan(String curPlayer, double avglifespan) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE TimeStats SET avgLifeSpan = '" +  avglifespan + "' WHERE Username = '" + curPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}			
+	}
+	
+	public void setDaysPlayed(String currPlayer, double daysPlayed) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE TimeStats SET daysPlayed = '" +  daysPlayed + "' WHERE Username = '" + currPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}
+	}
+	
+	public void setAvgMatchLength(String currPlayer, double avgmatchlength) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE TimeStats SET avgMatchLength = '" +  avgmatchlength + "' WHERE Username = '" + currPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}		
+	}
+	
+	public void setWins(String currPlayer, int Wins)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Player SET Wins = '" +  Wins + "' WHERE Username = '" + currPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}				
+	}
+	
+	public void setLosses(String currPlayer, int Losses)
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			stmt = conn.createStatement();
+			String sql = "UPDATE Player SET Losses = '" +  Losses + "' WHERE Username = '" + currPlayer + "';";
+			stmt.executeUpdate(sql);
+			System.out.println("Succssful update");
+			stmt.close();
+			conn.close();
+		} 
+		catch (final SQLException se) {se.printStackTrace();}
+		catch (final Exception e) {e.printStackTrace();} 
+		finally { try { if (stmt != null) stmt.close();} catch (final SQLException se2) {}
+		try { if (conn != null) conn.close();} catch (final SQLException se) {se.printStackTrace();}}				
+	}
+	//select certain attributes
+	
+	public int getTotalKills(String curPlayer) throws Exception {
+		int total_kills = 0;
+		try {
 
-    int getTotalDeaths(String curPlayer)  throws Exception{
-        int total_deaths;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT Deaths FROM Player WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        total_deaths = rs.getInt("Deaths");
-        return total_deaths;
-    }
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 
-    String getDisplayName(String curPlayer) throws Exception{
-        String display_name = null;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT displayName FROM Player WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        display_name = rs.getString("displayName");
-        return display_name;
-    }
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-    //Account Entity Queries
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Kills FROM Player WHERE Username = '" + curPlayer + "';";
 
-    //only use for login, then save locally while logged in for use in other queries
-    String getPassword(String username, String Password)  throws Exception{
-         String pass_hash = null;
-         stmt = conn.createStatement();
-         String sql;
-         sql = "SELECT Password FROM Account WHERE Username = " + username;
-         ResultSet rs = stmt.executeQuery(sql);
-         pass_hash = rs.getString(Password);
-         return pass_hash;
-    }
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			//total_kills = rs.getInt("Kills");
+			rs.next();
+			total_kills = rs.getInt(1);
+			
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
 
-    Boolean getAdminStatus(String username)  throws Exception{
-        Boolean is_admin = false;
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT Admin FROM Account WHERE Username = " + username;
-        ResultSet rs = stmt.executeQuery(sql);
-        is_admin = rs.getBoolean("Admin");
-        return is_admin;
-    }
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		return total_kills;
+	}
 
-    //TimeStats Entity Queries
-    Double getAvgLifespan(String curPlayer)  throws Exception{
-        Double avg_lifespan = null;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT avgLifespan FROM TimeStats WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        avg_lifespan = rs.getDouble("avgLifespan");
-        return avg_lifespan;
-    }
+	public int getTotalDeaths(String curPlayer) throws Exception {
+		int total_deaths = 0;
+		try {
 
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
-    Double getTotalTimePlayed(String curPlayer)  throws Exception{
-        Double total_time = null;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT totalPlayTime FROM TimeStats WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        total_time = rs.getDouble("totalPlayTime");
-        return total_time;
-    }
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-    Double getDaysPlayed(String curPlayer)  throws Exception{
-        Double days = null;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT daysPlayed FROM TimeStats WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        days = rs.getDouble("daysPlayed");
-        return days;
-    }
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Deaths FROM Player WHERE Username = '" + curPlayer + "';";
 
-    Double getAvgMatchLength(String curPlayer)  throws Exception{
-        Double avgMatchLength = null;
-        System.out.println("Creating statement...");
-        stmt = conn.createStatement();
-        String sql;
-        sql = "SELECT avgMatchLength FROM TimeStats WHERE Username = " + curPlayer;
-        ResultSet rs = stmt.executeQuery(sql);
-        avgMatchLength = rs.getDouble("avgMatchLength");
-        return avgMatchLength;
-    }
-    
-}//end FirstExample
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			total_deaths = rs.getInt("Deaths");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return total_deaths;
+	}
+
+	public String getDisplayName(String curPlayer) throws Exception {
+		String display_name = null;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT displayName FROM Player WHERE Username = '" + curPlayer +"'";
+			
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			display_name = rs.getString("displayName");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return display_name;
+	}
+
+	public String getPassword(String username) throws Exception {
+		String pass_hash = null;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Password FROM Account WHERE Username = '" + username + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+
+			pass_hash = rs.getString("password");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return pass_hash;
+	}
+
+	public Boolean getAdminStatus(String username) throws Exception {
+		Boolean is_admin = false;
+		try {
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Admin FROM Account WHERE Username = '" + username + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			is_admin = rs.getBoolean("Admin");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return is_admin;
+	}
+
+	public Double getTotalTimePlayed(String curPlayer) throws Exception {
+		Double total_time = null;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT totalPlayTime FROM TimeStats WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			total_time = rs.getDouble("totalPlayTime");
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return total_time;
+	}
+
+	public Double getAvgLifespan(String curPlayer) throws Exception {
+		Double avg_lifespan = null;
+
+		try {
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT avgLifespan FROM TimeStats WHERE Username =  '" + curPlayer + "';";
+
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			avg_lifespan = rs.getDouble("avgLifespan");
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return avg_lifespan;
+	}
+
+	public Double getDaysPlayed(String curPlayer) throws Exception {
+		Double days = null;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT daysPlayed FROM TimeStats WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			days = rs.getDouble("daysPlayed");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return days;
+	}
+
+	public Double getAvgMatchLength(String curPlayer) throws Exception {
+		Double avgMatchLength = null;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT avgMatchLength FROM TimeStats WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			avgMatchLength = rs.getDouble("avgMatchLength");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return avgMatchLength;
+	}
+
+	public int getTotalLosses(String curPlayer) throws Exception
+	{
+		int losses = 0;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Losses FROM Player WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			losses = rs.getInt("Losses");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return losses;
+	}
+	
+	public int getTotalWins(String curPlayer) throws Exception
+	{
+		int wins = 0;
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Wins FROM Player WHERE Username = '" + curPlayer + "';";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			rs.next();
+			wins = rs.getInt("Wins");
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+
+		return wins;
+	}
+	
+	public ArrayList<String> getAllUsernames()
+	{
+		
+		ArrayList<String> users = new ArrayList<String>();
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Username FROM Player";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next())
+			{
+				users.add(rs.getString("Username"));
+			}
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		return users;
+	}
+	
+	public ArrayList<String[]> getLeaderBoard()
+	{
+		ArrayList<String[]> leaderboard = new ArrayList<String[]>();
+		
+		
+		String sql = "SELECT Username,Kills,Deaths,Wins,Losses,totalPlayTime FROM (Player NATURAL JOIN TimeStats) ORDER BY Wins DESC;";
+		
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next())
+			{
+				String[] row = new String[6];
+				row[0] = rs.getString("Username");
+				row[1] = rs.getString("Kills");
+				row[2] = rs.getString("Deaths");
+				row[3] = rs.getString("Wins");
+				row[4] = rs.getString("Losses");
+				row[5] = rs.getString("totalPlayTime");
+				leaderboard.add(row);
+			}
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		
+		return leaderboard;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
