@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SQLCalls {
@@ -40,7 +41,7 @@ public class SQLCalls {
 //			System.out.println("Amount of Days Played: " + s.getDaysPlayed("username1"));
 //			System.out.println("Average Match Length: " + s.getAvgMatchLength("username1"));
 			
-			s.removeRecord("moo");
+			//s.removeRecord("moo");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -727,4 +728,58 @@ public class SQLCalls {
 		return avgMatchLength;
 	}
 
+	public ArrayList<String> getAllUsernames()
+	{
+		
+		ArrayList<String> users = new ArrayList<String>();
+
+		try {
+
+			// STEP 2: Register JDBC driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// STEP 3: Open a connection
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+			// STEP 4: Create query
+			System.out.println("Creating statement...");
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT Username FROM Player";
+			// STEP 5: Save result
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next())
+			{
+				users.add(rs.getString("Username"));
+			}
+
+			// STEP 6: Clean-up environment
+			rs.close();
+			stmt.close();
+			conn.close();
+
+		} catch (final SQLException se) {
+			// Handle errors for JDBC
+			se.printStackTrace();
+		} catch (final Exception e) {
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (final SQLException se2) {
+			} // nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (final SQLException se) {
+				se.printStackTrace();
+			} // end finally try
+		} // end try
+		return users;
+	}
+	
 }
