@@ -2,13 +2,17 @@ package UI;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import Game.GUI;
+import SQL.SQLCalls;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
@@ -46,13 +50,16 @@ public class GameGui extends Application
 	Scene homeScene;
 	String user = "Test";
 	String pw = "Test";
+	
+	SQLCalls s;
+	
 	private boolean alreadyLogged = false;
 	
 		public GameGui(String user, String pw)
 		{
 			this.user = user;
 			this.pw = pw;
-			alreadyLogged =true;
+			alreadyLogged = true;
 		}
 		public GameGui()
 		{
@@ -62,6 +69,9 @@ public class GameGui extends Application
 	    @Override
 	    public void start(Stage primaryStage) 
 	    {
+	    	
+			s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
+
 	    	//set css file
 	    	File f = new File("style.css");
 	    	//###########################  Instantiate panes/scenes  #############################
@@ -187,41 +197,17 @@ public class GameGui extends Application
 	        login.add(createAcc, 1, 3);
 	        
 	        //login fire on enter press (need to focus button first)
-	        loginButton.addEventHandler(KeyEvent.KEY_PRESSED, ev->{
-	        	if(ev.getCode() == KeyCode.ENTER) {
-	        		loginButton.fire();
-	        		ev.consume();
+	        loginScene.setOnKeyReleased(e->{
+	        	if(e.getCode() == KeyCode.ENTER)
+	        	{
+		        	loginAction(txtUserName.getText(), pf.getText(), primaryStage,f);
 	        	}
 	        });
 	        
 	        
 	        //save input as strings and move to homeScene
 	        loginButton.setOnAction(action -> {
-	        	String uNameInput = txtUserName.getText();
-	        	String pwInput = pf.getText();
-	        	
-	        	if(uNameInput.length()<1 || pwInput.length()<1) {
-	        		Alert alert = new Alert(AlertType.ERROR);
-	        		alert.setTitle("Error Dialog");
-	        		alert.setHeaderText("Error");
-	        		alert.setContentText("please input a username and password");
-
-	        		alert.showAndWait();
-	        	}else {
-		        	pw = pwInput;
-		        	user = uNameInput;
-		        	
-		        	//test with system
-		        	System.out.println(uNameInput);
-		        	System.out.println(pwInput);
-		        	
-		        	//test user/password, change scene
-		        	
-			        homeScene.getStylesheets().clear();
-			        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-		        	primaryStage.setScene(homeScene);
-	        	}
-	        	
+	        	loginAction(txtUserName.getText(), pf.getText(), primaryStage, f);
 	        });
 	        
 	        createAcc.setOnAction(action -> {
@@ -239,26 +225,86 @@ public class GameGui extends Application
 	        	String uNameInput = txtUserName.getText();
 	        	String pwInput = pf.getText();
 	        	String confirmPW = confirmfield.getText();
+
+	        	ArrayList<String> users = s.getAllUsernames();
 	        	
-	        	if(uNameInput.length() == 0) {
+	        	boolean bad = false;
+	        	
+	        	for(int i = 0; i < users.size(); i++)
+	        	{
+	        		if(uNameInput.equals(users.get(i)))
+	        		{
+		        		bad = true;
+	        			break;
+	        		}
+	        	}
+	        	
+	        	if(bad)
+	        	{
+        			Alert alert = new Alert(AlertType.ERROR);
+	        		alert.setTitle("Username Already Taken Dialog");
+	        		alert.setHeaderText("Error");
+	        		alert.setContentText("please input a different username!");
+	        		alert.showAndWait();
+	        	}
+	        	else if(uNameInput.length() == 0) {
 	        		Alert alert = new Alert(AlertType.ERROR);
 	        		alert.setTitle("Error Dialog");
 	        		alert.setHeaderText("Error");
 	        		alert.setContentText("please input a username!");
 	        	}
-	        	
-	        	if(confirmPW.equals(confirmPW) && confirmPW.length()>0) {
-	        		homeScene.getStylesheets().clear();
-			        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        		primaryStage.setScene(homeScene);
-	        	}else {
+	        	else if(!pwInput.equals(confirmPW)){
 	        		Alert alert = new Alert(AlertType.ERROR);
 	        		alert.setTitle("Error Dialog");
 	        		alert.setHeaderText("Error");
 	        		alert.setContentText("Your Passwords have to match!");
-
 	        		alert.showAndWait();
 	        	}
+	        	else
+	        	{
+	        		s.newRecord(uNameInput, pwInput);
+	        		
+	        		Alert alert = new Alert(AlertType.INFORMATION);
+	        		alert.setTitle("Success");
+	        		alert.setHeaderText("Successfully Created a new Acccount");
+	        		Optional<ButtonType> result = alert.showAndWait();
+	        		
+	        		System.out.println("alert should be shown");
+	        		
+	        		if(result.get() == ButtonType.OK)
+	        		{
+	        			pw = pwInput;
+			        	user = uNameInput;
+			        	
+			        	//test with system
+			        	System.out.println(uNameInput);
+			        	System.out.println(pwInput);
+			        	
+			        	//test user/password, change scene
+			        	
+				        homeScene.getStylesheets().clear();
+				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+			        	primaryStage.setScene(homeScene);
+	        		}
+	        		
+	        		alert.setOnCloseRequest(e->{
+	        			pw = pwInput;
+			        	user = uNameInput;
+			        	
+			        	//test with system
+			        	System.out.println(uNameInput);
+			        	System.out.println(pwInput);
+			        	
+			        	//test user/password, change scene
+			        	
+				        homeScene.getStylesheets().clear();
+				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+			        	primaryStage.setScene(homeScene);
+	        		});
+	        		
+	        		
+	        	}
+	        	
 	        });
 	        
 	        
@@ -292,5 +338,55 @@ public class GameGui extends Application
 	    public static void main(String[] args) {
 			launch(args);
 		}
+	    
+	    public void loginAction(String user, String pass, Stage primaryStage, File f)
+	    {
+        	String uNameInput = user;
+        	String pwInput = pass;
+        	
+        	boolean unlock = false;
+        	
+        	try{
+        		unlock = s.getPassword(uNameInput).equals(pwInput);
+        	}
+        	catch(Exception e )
+        	{
+        		System.out.println("Error connecting to database");
+        	}
+        	
+        	
+        	if(uNameInput.length()<1 || pwInput.length()<1) {
+        		Alert alert = new Alert(AlertType.ERROR);
+        		alert.setTitle("Error Dialog");
+        		alert.setHeaderText("Error");
+        		alert.setContentText("please input a username and password");
+
+        		alert.showAndWait();
+        	}
+        	else if(unlock)
+        	{
+	        	pw = pwInput;
+	        	user = uNameInput;
+	        	
+	        	//test with system
+	        	System.out.println(uNameInput);
+	        	System.out.println(pwInput);
+	        	
+	        	//test user/password, change scene
+	        	
+		        homeScene.getStylesheets().clear();
+		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        	primaryStage.setScene(homeScene);
+        	}
+        	else
+        	{
+        		Alert alert = new Alert(AlertType.ERROR);
+        		alert.setTitle("Error Dialog");
+        		alert.setHeaderText("Error");
+        		alert.setContentText("Incorrect Username or Password");
+
+        		alert.showAndWait();
+        	}
+	    }
 
 }

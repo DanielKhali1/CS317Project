@@ -41,7 +41,7 @@ public class SQLCalls {
 //			System.out.println("Amount of Days Played: " + s.getDaysPlayed("username1"));
 //			System.out.println("Average Match Length: " + s.getAvgMatchLength("username1"));
 			
-			//s.removeRecord("moo");
+			s.removeRecord("Danny");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
