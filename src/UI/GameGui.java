@@ -123,12 +123,7 @@ public class GameGui extends Application
 	        setScene.getStylesheets().clear();
         	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
 	        
-	        //Leaderboard page
-	        BorderPane leadPane = new BorderPane();
-	        leadPane.setId("pane");
-	        leadScene = new Scene(leadPane, 1000, 700);
-	        leadScene.getStylesheets().clear();
-        	leadScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        
 
 	        //######################## login layout ########################################
 	        
@@ -358,7 +353,8 @@ public class GameGui extends Application
 	       });
 	       
 	       leader.setOnAction(e -> {
-	    	   primaryStage.setScene(leadScene);
+	    	   new LeaderBoards(user,pw).start(new Stage());
+	    	   primaryStage.close();
 	       });
 
 
@@ -395,8 +391,8 @@ public class GameGui extends Application
         	}
         	else if(unlock)
         	{
-	        	pw = pwInput;
-	        	user = uNameInput;
+	        	this.pw = pwInput;
+	        	this.user = uNameInput;
 	        	
 	        	//test with system
 	        	System.out.println(uNameInput);
