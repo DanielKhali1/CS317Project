@@ -507,9 +507,9 @@ public class GUI extends Application
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
 
-							s.setTotalDeaths(username, deaths + (playerHealth-3));
-							s.setTotalKills(username, kills + (enemyHealth-3));
-							s.setLosses(username, losses-1);
+							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
+							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
+							s.setLosses(username, losses+1);
 						}
 						catch(Exception e)
 						{
@@ -561,9 +561,9 @@ public class GUI extends Application
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
 							
-							s.setTotalDeaths(username, deaths + (playerHealth-3));
-							s.setTotalKills(username, kills + (enemyHealth-3));
-							s.setWins(username, wins-1);
+							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
+							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
+							s.setWins(username, wins+1);
 						}
 						catch(Exception e)
 						{
