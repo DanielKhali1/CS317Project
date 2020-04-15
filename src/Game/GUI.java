@@ -667,6 +667,16 @@ public class GUI extends Application
 			p1View.setLayoutX(manager.player.getPos().x);
 			p1View.setLayoutY(manager.player.getPos().y);
 			
+			if(manager.player.getPos().y > scene.getHeight())
+			{
+				rect.setWidth(-10);
+			}
+			for(int i = 0; i < otherPlayerDisplays.size(); i++)
+			{
+				if(otherPlayerDisplays.get(i).getLayoutY() > scene.getHeight())
+					Enemyrect.setWidth(-10);
+			}
+			
 		}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.play();

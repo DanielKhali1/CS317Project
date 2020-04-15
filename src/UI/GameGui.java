@@ -75,6 +75,7 @@ public class GameGui extends Application
 			s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 
 	    	//set css file
+			
 	    	File f = new File("style.css");
 	    	//###########################  Instantiate panes/scenes  #############################
 	    	//Initial scene
@@ -333,7 +334,7 @@ public class GameGui extends Application
 
 	       profile.setOnAction(e -> {
 				try {
-					new Profile().start(new Stage());
+					new Profile(user, pw).start(new Stage());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -343,7 +344,7 @@ public class GameGui extends Application
 
 	       settings.setOnAction(e -> {
 	    	   try {
-				new Settings().start(new Stage());
+				new Settings(user, pw).start(new Stage());
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

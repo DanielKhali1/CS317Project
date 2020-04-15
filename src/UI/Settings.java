@@ -13,7 +13,19 @@ public class Settings extends Application
 {
 	
 	Scene setScene;
-
+	String username,pass;
+	
+	public Settings()
+	{
+		username = "Test";
+		pass = "Test";
+	}
+	
+	public Settings(String username, String pass)
+	{
+		this.username = username;
+		this.pass = pass;
+	}
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
@@ -29,7 +41,7 @@ public class Settings extends Application
         setPane.getChildren().add(back);
         
         back.setOnAction(e -> {
-        	new GameGui().start(new Stage());
+        	new GameGui(username, pass).start(new Stage());
         	primaryStage.close();
         });
         

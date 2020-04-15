@@ -13,6 +13,20 @@ public class Profile extends Application
 {
 	
 	Scene profileScene;
+	String username,pass;
+	
+	public Profile()
+	{
+		username = "Test";
+		pass = "Test";
+	}
+	
+	public Profile(String username, String pass)
+	{
+		this.username = username;
+		this.pass = pass;
+	}
+	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception
@@ -29,7 +43,7 @@ public class Profile extends Application
         profilePane.getChildren().add(back);
         
         back.setOnAction(e -> {
-        	new GameGui().start(new Stage());
+        	new GameGui(username, pass).start(new Stage());
         	primaryStage.close();
         });
         

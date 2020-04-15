@@ -113,8 +113,8 @@ public class LeaderBoards extends Application
 			else
 			{
 				cells[i][0] = new Button((i)+"");
-				cells[i][2] = new Button((Double.parseDouble(sqlGrab.get(i)[2]) == 0)? 0+"": (Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]) )+"");
-				cells[i][3] = new Button((Double.parseDouble(sqlGrab.get(i)[4]) == 0)? 0+"": (Double.parseDouble(sqlGrab.get(i)[3])/Double.parseDouble(sqlGrab.get(i)[4]))+"");
+				cells[i][2] = new Button((Double.parseDouble(sqlGrab.get(i)[2]) == 0)? (Double.parseDouble(sqlGrab.get(i)[1])+"") : (Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]) )+"");
+				cells[i][3] = new Button((Double.parseDouble(sqlGrab.get(i)[4]) == 0)? (Double.parseDouble(sqlGrab.get(i)[3])+""): (Double.parseDouble(sqlGrab.get(i)[3])/Double.parseDouble(sqlGrab.get(i)[4]))+"");
 				
 			}
 			cells[i][4] = new Button(sqlGrab.get(i)[1]);
