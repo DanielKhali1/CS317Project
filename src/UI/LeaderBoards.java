@@ -109,19 +109,24 @@ public class LeaderBoards extends Application
 				cells[i][0] = new Button("Rank");
 				cells[i][2] = new Button("K/D");
 				cells[i][3] = new Button("W/L");
+				cells[i][4] = new Button(sqlGrab.get(i)[1]);
+				cells[i][5] = new Button(sqlGrab.get(i)[2]);
+				cells[i][6] = new Button(sqlGrab.get(i)[3]);
+				cells[i][7] = new Button(sqlGrab.get(i)[4]);
+				cells[i][8] = new Button(sqlGrab.get(i)[5]);
 			}
 			else
 			{
 				cells[i][0] = new Button((i)+"");
-				cells[i][2] = new Button((Double.parseDouble(sqlGrab.get(i)[2]) == 0)? (Double.parseDouble(sqlGrab.get(i)[1])+"") : (Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]) )+"");
-				cells[i][3] = new Button((Double.parseDouble(sqlGrab.get(i)[4]) == 0)? (Double.parseDouble(sqlGrab.get(i)[3])+""): (Double.parseDouble(sqlGrab.get(i)[3])/Double.parseDouble(sqlGrab.get(i)[4]))+"");
+				cells[i][2] = new Button(	(Double.parseDouble(sqlGrab.get(i)[2]) == 0)? (Math.round(Double.parseDouble(sqlGrab.get(i)[1])*100.0)/100.0+"") : Math.round((Double.parseDouble(sqlGrab.get(i)[1])/Double.parseDouble(sqlGrab.get(i)[2]))*100.0)/100.0 +"") ;
+				cells[i][3] = new Button(	(Double.parseDouble(sqlGrab.get(i)[4]) == 0)? (Math.round(Double.parseDouble(sqlGrab.get(i)[3])*100.0)/100.0+"") : Math.round((Double.parseDouble(sqlGrab.get(i)[3])/Double.parseDouble(sqlGrab.get(i)[4]))*100.0)/100.0 +"")  ;
+				cells[i][4] = new Button(sqlGrab.get(i)[1]);
+				cells[i][5] = new Button(sqlGrab.get(i)[2]);
+				cells[i][6] = new Button(sqlGrab.get(i)[3]);
+				cells[i][7] = new Button(sqlGrab.get(i)[4]);
+				cells[i][8] = new Button(Math.round(Double.parseDouble(sqlGrab.get(i)[5]) * 100.0)/100.0 + "");
 				
 			}
-			cells[i][4] = new Button(sqlGrab.get(i)[1]);
-			cells[i][5] = new Button(sqlGrab.get(i)[2]);
-			cells[i][6] = new Button(sqlGrab.get(i)[3]);
-			cells[i][7] = new Button(sqlGrab.get(i)[4]);
-			cells[i][8] = new Button(sqlGrab.get(i)[5]);
 
 			cells[i][0].setPrefWidth(WIDTH_RANK);
 			cells[i][1].setPrefWidth(WIDTH_USERNAME); 

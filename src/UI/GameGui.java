@@ -395,10 +395,6 @@ public class GameGui extends Application
 	        	this.user = uNameInput;
 
 	        	//test with system
-	        	System.out.println(uNameInput);
-	        	System.out.println(pwInput);
-
-	        	//test user/password, change scene
 
 		        homeScene.getStylesheets().clear();
 		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));

@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import SQL.SQLCalls;
 import UI.GameGui;
@@ -112,6 +113,8 @@ public class GUI extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		
+		long startTime = System.nanoTime();
 		
 		s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 
@@ -506,6 +509,16 @@ public class GUI extends Application
 							int losses = s.getTotalLosses(username);
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
+							
+							double time = s.getTotalTimePlayed(username);
+							
+							long endTime = System.nanoTime();
+							
+							double totalTime = (endTime - startTime) / 1000000;
+							totalTime /= 60000;
+							
+							
+							s.setTotalTimePlayed(username, time + Math.abs(totalTime));
 
 							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
 							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
@@ -560,7 +573,15 @@ public class GUI extends Application
 							int wins = s.getTotalWins(username);
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
+							double time = s.getTotalTimePlayed(username);
 							
+							long endTime = System.nanoTime();
+							
+							double totalTime = (endTime - startTime) / 1000000;
+							totalTime /= 60000;
+							
+							
+							s.setTotalTimePlayed(username, time + Math.abs(totalTime));
 							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
 							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
 							s.setWins(username, wins+1);
