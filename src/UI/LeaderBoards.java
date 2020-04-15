@@ -1,6 +1,7 @@
 package UI;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -52,8 +53,11 @@ public class LeaderBoards extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-		scene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
-		pane.setId("pane");
+		try {
+        	scene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+		} catch (MalformedURLException e2) {
+			e2.printStackTrace();
+		}		pane.setId("pane");
 		Pane leaderboardPane = new Pane();
 		ScrollPane sp = new ScrollPane(leaderboardPane);
 		sp.setPrefHeight(500);

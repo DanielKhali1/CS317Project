@@ -104,7 +104,12 @@ public class GameGui extends Application
 	        else
 	        {
 	        	homeScene.getStylesheets().clear();
-	        	homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+				try {
+					loginScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 	        	primaryStage.setScene(homeScene);
 	        }
 
@@ -122,7 +127,11 @@ public class GameGui extends Application
 	        setPane.setId("pane");
 	        setScene = new Scene(setPane, 1000, 700);
 	        setScene.getStylesheets().clear();
-        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        try {
+				setScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+			} catch (MalformedURLException e2) {
+				e2.printStackTrace();
+			}
 
 
 	        //######################## login layout ########################################
@@ -284,8 +293,11 @@ public class GameGui extends Application
 			        	//test user/password, change scene
 
 				        homeScene.getStylesheets().clear();
-				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-			        	primaryStage.setScene(homeScene);
+				        try {
+				        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+						} catch (MalformedURLException e2) {
+							e2.printStackTrace();
+						}			        	primaryStage.setScene(homeScene);
 	        		}
 
 	        		alert.setOnCloseRequest(e->{
@@ -299,8 +311,11 @@ public class GameGui extends Application
 			        	//test user/password, change scene
 
 				        homeScene.getStylesheets().clear();
-				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-			        	primaryStage.setScene(homeScene);
+				        try {
+				        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+						} catch (MalformedURLException e2) {
+							e2.printStackTrace();
+						}			        	primaryStage.setScene(homeScene);
 	        		});
 
 
@@ -397,8 +412,12 @@ public class GameGui extends Application
 	        	//test with system
 
 		        homeScene.getStylesheets().clear();
-		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        	primaryStage.setScene(homeScene);
+		        try {
+		        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+				} catch (MalformedURLException e2) {
+					e2.printStackTrace();
+				}	
+		        primaryStage.setScene(homeScene);
         	}
         	else
         	{

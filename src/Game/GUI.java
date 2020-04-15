@@ -694,8 +694,9 @@ public class GUI extends Application
 			}
 			for(int i = 0; i < otherPlayerDisplays.size(); i++)
 			{
-				if(otherPlayerDisplays.get(i).getLayoutY() > scene.getHeight())
+				if(otherPlayerDisplays.get(i).getLayoutY() > scene.getHeight() && rect.getWidth() > 0)
 					Enemyrect.setWidth(-10);
+				break;
 			}
 			
 		}));
