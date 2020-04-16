@@ -1,11 +1,15 @@
 package Game;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import SQL.SQLCalls;
 import UI.GameGui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -32,6 +36,8 @@ public class GUI extends Application
 	public final static double BULLET_SPEED = 15;
 	Pane gamePane = new Pane();
 	Scene scene = new Scene(gamePane, 1080, 720);
+	
+	SQLCalls s;
 	
 	Manager manager = new Manager(scene.getWidth(), scene.getHeight());
 	PlayerRect playerDisplay;
@@ -60,7 +66,7 @@ public class GUI extends Application
 	int enemyHealth = 3;
 	int playerHealth = 3;
 	Timeline timeline;
-	
+	Timeline timelineHost;
 	String username;
 	String password;
 	/**
@@ -106,6 +112,9 @@ public class GUI extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		
+		s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
+
 		p1 = new Image("P1.png");
 		p1Heart = new Image("P1Heart.png");	
 		p2 = new Image("P2.png");
@@ -122,23 +131,29 @@ public class GUI extends Application
 		primaryStage.setScene(scene);
 
 		
-		ppane.setStyle("-fx-background-color: #0f1f42;");
+		ppane.setStyle("-fx-background-color: #87c3ed;");
 		
 		if(host)
 		{
 			
 			Text title = new Text("Hosting");
-			title.setStyle("-fx-font-size: 30;");
+			title.setStyle("-fx-font-size: 50; -fx-font-weight: bold");
 			title.setFill(Color.WHITE);
-			title.relocate(175, 20);
+			title.relocate(145, 40);
 			
 			isServer = true;
 			
 			String ip = "0.0.0.0";
 			try
 			{
+				URL whatismyip = new URL("http://checkip.amazonaws.com");
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+				                whatismyip.openStream()));
+
+				String ExternalIP = in.readLine(); 
+				
 				InetAddress inetAddress = InetAddress.getLocalHost();
-				ip = inetAddress.getHostAddress()+"";
+				ip = inetAddress.getHostAddress()+"\nExternal\n" + ExternalIP;
 			}
 			catch(Exception e)
 			{
@@ -148,17 +163,21 @@ public class GUI extends Application
 			Text iptxt = new Text("Your IP Adress:\n" + ip);
 			iptxt.setFill(Color.WHITE);
 
-			iptxt.relocate(175, 100);
-			iptxt.setStyle("-fx-font-size: 20; -fx-text-align: center;");
+			iptxt.relocate(130, 100);
+			iptxt.setStyle("-fx-font-size: 30; -fx-text-align: center;");
 
 			
 			Button playBt = new Button("Play");
 			playBt.relocate(20, 400);
+			playBt.setStyle("-fx-font-size: 30;");
 			Button cancelBt = new Button("Cancel");
-			cancelBt.relocate(300, 400);
+			cancelBt.relocate(350, 400);
+			cancelBt.setStyle("-fx-font-size: 30;");
 			
 			Text waitingtxt = new Text("Waiting for players to join ...");
-			waitingtxt.relocate(175, 200);
+			waitingtxt.setStyle("-fx-font-size: 20; -fx-text-align: center;");
+
+			waitingtxt.relocate(160, 350);
 			waitingtxt.setFill(Color.WHITE);
 	
 			ppane.getChildren().addAll(title, iptxt, playBt, cancelBt, waitingtxt);
@@ -173,28 +192,13 @@ public class GUI extends Application
 				System.out.println("startconn didn't work");
 			}
 			
-			Timeline timeline = new Timeline(new KeyFrame(Duration.millis(25), (ActionEvent event) -> 
+			timelineHost = new Timeline(new KeyFrame(Duration.millis(200), (ActionEvent event) -> 
 			{
-				try 
-				{
-					connection.send(isServer ? "server,"+ nme.getText() + "," + manager.player.getPos().x + "," + manager.player.getPos().y + "," 
-							: "client,"+ nme.getText() + "," + manager.player.getPos().x + "," + manager.player.getPos().y + ",");
-				} 
-				catch (Exception e1) 
-				{
-					
-				}
-
-			}));
-			timeline.setCycleCount(Timeline.INDEFINITE);
-			timeline.play();
-			
-			playBt.setOnAction(e->{
-				if(otherPlayerDisplays.size() > 0)
+				if(otherPlayerDisplays.size() == 1)
 				{
 					try
 					{
-						timeline.stop();
+						timelineHost.stop();
 						nme.setText(username);
 						healthbarName.setText(username);
 						gamePane.getChildren().add(nme);
@@ -212,35 +216,79 @@ public class GUI extends Application
 				}
 				else
 				{
-					System.out.println(otherPlayerDisplays.size());
+					//System.out.println(otherPlayerDisplays.size());
 				}
-			});
+				
+				
+				
+				try 
+				{
+					connection.send(isServer ? "server,"+ nme.getText() + "," + manager.player.getPos().x + "," + manager.player.getPos().y + "," 
+							: "client,"+ nme.getText() + "," + manager.player.getPos().x + "," + manager.player.getPos().y + ",");
+				} 
+				catch (Exception e1) 
+				{
+					
+				}
+
+			}));
+			timelineHost.setCycleCount(Timeline.INDEFINITE);
+			timelineHost.play();
+			
+//			playBt.setOnAction(e->{
+//				if(otherPlayerDisplays.size() > 0)
+//				{
+//					try
+//					{
+//						timelineHost.stop();
+//						nme.setText(username);
+//						healthbarName.setText(username);
+//						gamePane.getChildren().add(nme);
+//						primaryStage.setTitle(isServer ? "Server: " : "Client: ");
+//						
+//						primaryStage.show();
+//						
+//						
+//					} 
+//					catch (Exception e1) 
+//					{
+//						
+//					}
+//					stage.close();
+//				}
+//				else
+//				{
+//					System.out.println(otherPlayerDisplays.size());
+//				}
+//			});
 		}
 		else
 		{
 			
 			Text title = new Text("Join");
-			title.setStyle("-fx-font-size: 30");
-			title.relocate(175, 20);
+			title.setStyle("-fx-font-size: 50; -fx-font-weight: bold");
+			title.relocate(195, 40);
 			title.setFill(Color.WHITE);
 			
 			isServer = false;
 
 			Text infotxt = new Text("Enter Host's IP");
 			infotxt.relocate(150, 100);
-			infotxt.setStyle("-fx-font-size: 20");
+			infotxt.setStyle("-fx-font-size: 30; -fx-font-weight: bold");
 			infotxt.setFill(Color.WHITE);
 			
 			
 			TextField tf = new TextField();
 			tf.relocate(125, 150);
-			tf.setStyle("-fx-background-color: #0f1f42; -fx-border-color: white; -fx-font-size: 20; -fx-text-fill: white ");
+			tf.setStyle("-fx-background-color: #87c3ed; -fx-border-color: white; -fx-font-size: 20; -fx-text-fill: white ");
 			
 			Button playBt = new Button("Connect");
 			playBt.relocate(20, 400);
+			playBt.setStyle("-fx-font-size: 30;");
 			
 			Button cancelBt = new Button("Cancel");
-			cancelBt.relocate(300, 400);
+			cancelBt.relocate(350, 400);
+			cancelBt.setStyle("-fx-font-size: 30;");
 			
 			
 			ppane.getChildren().addAll(title, tf, playBt, cancelBt, infotxt);
@@ -453,6 +501,20 @@ public class GUI extends Application
 						txt.relocate(400, 200);
 						Button exitbt = new Button("Exit");
 						exitbt.relocate(500,300);
+						
+						try {
+							int losses = s.getTotalLosses(username);
+							int kills = s.getTotalKills(username);
+							int deaths = s.getTotalDeaths(username);
+
+							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
+							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
+							s.setLosses(username, losses+1);
+						}
+						catch(Exception e)
+						{
+							System.out.println("SQL broke");
+						}
 
 						gamePane.getChildren().addAll(txt, exitbt);
 						
@@ -494,7 +556,23 @@ public class GUI extends Application
 						Button exitbt = new Button("Exit");
 						exitbt.relocate(500,300);
 						
+						try {
+							int wins = s.getTotalWins(username);
+							int kills = s.getTotalKills(username);
+							int deaths = s.getTotalDeaths(username);
+							
+							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
+							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
+							s.setWins(username, wins+1);
+						}
+						catch(Exception e)
+						{
+							System.out.println("SQL broke");
+						}
 						gamePane.getChildren().addAll(txt, exitbt);
+						
+						
+						
 						
 						exitbt.setOnAction(e->{
 							try 
@@ -599,7 +677,7 @@ public class GUI extends Application
 		return new Server(55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
 				String[] datapoints = ((String) data).split(",");
-				
+
 				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
 					
@@ -675,7 +753,7 @@ public class GUI extends Application
 		return new Client(ipAddress, 55555, nametf.getText(), data -> {
 			Platform.runLater(() ->{
 				String[] datapoints = ((String) data).split(",");
-
+				
 				
 				if(datapoints.length == 4 && !datapoints[1].equals(nme.getText()) )
 				{
@@ -735,7 +813,7 @@ public class GUI extends Application
 				else if(datapoints.length == 1)
 				{
 					if(Double.parseDouble(datapoints[0]) == 0.1)
-					rect.setWidth(rect.getWidth() - (300/10));
+						rect.setWidth(rect.getWidth() - (300/10));
 				}
 				
 				try 
