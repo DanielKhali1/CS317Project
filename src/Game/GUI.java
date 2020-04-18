@@ -458,8 +458,8 @@ public class GUI extends Application
 			}
 			if(e.getCode() == KeyCode.SPACE)
 				manager.playerJump();
-
 		});
+		
 		scene.setOnKeyReleased(e->{
 			if(e.getCode() == KeyCode.D || e.getCode() == KeyCode.KP_RIGHT)
 				right = false;
@@ -775,7 +775,6 @@ public class GUI extends Application
 				catch (Exception e)
 				{
 					//e.printStackTrace();
-					//System.out.println("Had nothing to resend");
 				}
 			});
 			

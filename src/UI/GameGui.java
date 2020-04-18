@@ -105,7 +105,7 @@ public class GameGui extends Application
 	        {
 	        	homeScene.getStylesheets().clear();
 				try {
-					loginScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+					homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
 				} catch (MalformedURLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
