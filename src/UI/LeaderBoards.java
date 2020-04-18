@@ -60,6 +60,7 @@ public class LeaderBoards extends Application
 		}		pane.setId("pane");
 		Pane leaderboardPane = new Pane();
 		ScrollPane sp = new ScrollPane(leaderboardPane);
+		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		sp.setPrefHeight(500);
 		sp.relocate(120, 150);
 		sp.setStyle("-fx-background-color: black");

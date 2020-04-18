@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,8 +130,13 @@ public class GUI extends Application
 		Stage stage = new Stage();
 		stage.setScene(sscene);
 		stage.show();
-		sscene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
-		scene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
+		try {
+		sscene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+		scene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+		} catch (MalformedURLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		primaryStage.setScene(scene);
 
 		
