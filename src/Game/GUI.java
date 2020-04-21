@@ -3,14 +3,10 @@ package Game;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-
 import SQL.SQLCalls;
 import UI.GameGui;
 import javafx.animation.KeyFrame;
@@ -25,7 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -701,8 +696,10 @@ public class GUI extends Application
 			for(int i = 0; i < otherPlayerDisplays.size(); i++)
 			{
 				if(otherPlayerDisplays.get(i).getLayoutY() > scene.getHeight() && rect.getWidth() > 0)
+				{
 					Enemyrect.setWidth(-10);
-				break;
+					break;
+				}
 			}
 			
 		}));

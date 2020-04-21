@@ -13,24 +13,35 @@ public class Client extends NetworkConnection{
 		super(onReceiveCallback);
 		this.ip = ip;
 		this.port = port;
-		this.name = name;
+		this.setName(name);
 	}
 
 	@Override
-	protected boolean isServer() {
+	protected boolean isServer() 
+	{
 		return false;
 	}
 
 	@Override
-	protected String getIP() {
-		// TODO Auto-generated method stub
+	protected String getIP() 
+	{
 		return this.ip;
 	}
 
 	@Override
-	protected int getPort() {
-		// TODO Auto-generated method stub
+	protected int getPort() 
+	{
 		return this.port;
+	}
+
+	public String getName() 
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 	
 	
