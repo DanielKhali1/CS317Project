@@ -71,24 +71,17 @@ public class LeaderBoards extends Application
 		title.setFill(Color.WHITE);
 		pane.getChildren().add(title);
 		
-		Image back = new Image("back-button.png");
-		ImageView backbtn = new ImageView(back);
+		Button backbtn = new Button();
+		backbtn.getStyleClass().add("backarrow");
 		backbtn.relocate(20, 20);
-		backbtn.setFitHeight(75);
-		backbtn.setFitWidth(75);
 		
 		backbtn.setOnMouseEntered(e->{
-			
-			backbtn.setFitHeight(80);
-			backbtn.setFitWidth(80);
 			backbtn.setLayoutX(17);
 			backbtn.setLayoutY(17);
 		});
 		backbtn.setOnMouseExited(e->{
 			backbtn.setLayoutX(20);
 			backbtn.setLayoutY(20);
-			backbtn.setFitHeight(75);
-			backbtn.setFitWidth(75);
 		});
 		
 		backbtn.setOnMouseClicked(e->{

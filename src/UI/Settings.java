@@ -24,7 +24,8 @@ import SQL.SQLCalls;
 
 public class Settings extends Application 
 {
-	
+	String username;
+	String pass;
 	Scene setScene;
 	String username,pass;
     Pane pane = new Pane();
@@ -56,7 +57,11 @@ public class Settings extends Application
         pane.getChildren().add(back);
         
         back.setOnAction(e -> {
+
+        	new GameGui(username,pass).start(new Stage());
+
         	new GameGui(username, pass).start(new Stage());
+
         	primaryStage.close();
         });
         
@@ -177,6 +182,16 @@ public class Settings extends Application
 	
     public static void main(String[] args) {
 		launch(args);
+	}
+    
+    public Settings() {
+    	
+    }
+    
+	public Settings(String username, String pass)
+	{
+		this.username = username;
+		this.pass = pass;
 	}
 
 }
