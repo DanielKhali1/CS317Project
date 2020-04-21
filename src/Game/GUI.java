@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import SQL.SQLCalls;
 import UI.GameGui;
@@ -113,6 +115,8 @@ public class GUI extends Application
 	public void start(Stage primaryStage)
 	{
 		
+		long startTime = System.nanoTime();
+		
 		s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 
 		p1 = new Image("P1.png");
@@ -126,8 +130,13 @@ public class GUI extends Application
 		Stage stage = new Stage();
 		stage.setScene(sscene);
 		stage.show();
-		sscene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
-		scene.getStylesheets().add("File:///"+new File("style.css").getAbsolutePath().replace("\\","/"));
+		try {
+		sscene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+		scene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+		} catch (MalformedURLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		primaryStage.setScene(scene);
 
 		
@@ -455,8 +464,8 @@ public class GUI extends Application
 			}
 			if(e.getCode() == KeyCode.SPACE)
 				manager.playerJump();
-
 		});
+		
 		scene.setOnKeyReleased(e->{
 			if(e.getCode() == KeyCode.D || e.getCode() == KeyCode.KP_RIGHT)
 				right = false;
@@ -506,6 +515,16 @@ public class GUI extends Application
 							int losses = s.getTotalLosses(username);
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
+							
+							double time = s.getTotalTimePlayed(username);
+							
+							long endTime = System.nanoTime();
+							
+							double totalTime = (endTime - startTime) / 1000000;
+							totalTime /= 60000;
+							
+							
+							s.setTotalTimePlayed(username, time + Math.abs(totalTime));
 
 							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
 							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
@@ -560,7 +579,15 @@ public class GUI extends Application
 							int wins = s.getTotalWins(username);
 							int kills = s.getTotalKills(username);
 							int deaths = s.getTotalDeaths(username);
+							double time = s.getTotalTimePlayed(username);
 							
+							long endTime = System.nanoTime();
+							
+							double totalTime = (endTime - startTime) / 1000000;
+							totalTime /= 60000;
+							
+							
+							s.setTotalTimePlayed(username, time + Math.abs(totalTime));
 							s.setTotalDeaths(username, deaths + Math.abs(playerHealth-3));
 							s.setTotalKills(username, kills + Math.abs(enemyHealth-3));
 							s.setWins(username, wins+1);
@@ -667,6 +694,17 @@ public class GUI extends Application
 			p1View.setLayoutX(manager.player.getPos().x);
 			p1View.setLayoutY(manager.player.getPos().y);
 			
+			if(manager.player.getPos().y > scene.getHeight())
+			{
+				rect.setWidth(-10);
+			}
+			for(int i = 0; i < otherPlayerDisplays.size(); i++)
+			{
+				if(otherPlayerDisplays.get(i).getLayoutY() > scene.getHeight() && rect.getWidth() > 0)
+					Enemyrect.setWidth(-10);
+				break;
+			}
+			
 		}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.play();
@@ -743,7 +781,6 @@ public class GUI extends Application
 				catch (Exception e)
 				{
 					//e.printStackTrace();
-					//System.out.println("Had nothing to resend");
 				}
 			});
 			

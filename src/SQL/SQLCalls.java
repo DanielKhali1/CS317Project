@@ -41,10 +41,10 @@ public class SQLCalls {
 //			System.out.println("Amount of Days Played: " + s.getDaysPlayed("username1"));
 //			System.out.println("Average Match Length: " + s.getAvgMatchLength("username1"));
 			
-//			s.removeRecord("Danny");
+//			s.removeRecord("Moo");
 //			s.setLosses("Doopy", 69);
-			System.out.println(s.getTotalWins("Danny"));
-			System.out.println(s.getTotalLosses("Danny"));
+//			System.out.println(s.getTotalWins("Danny"));
+//			System.out.println(s.getTotalLosses("Danny"));
 	
 		} catch (Exception e) {
 			e.printStackTrace();

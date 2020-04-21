@@ -75,6 +75,7 @@ public class GameGui extends Application
 			s = new SQLCalls("mysql.us.cloudlogin.co", "3306", "dkhalil_cs317", "dkhalil_cs317", "6d9d6FHkfI");
 
 	    	//set css file
+			
 	    	File f = new File("style.css");
 	    	//###########################  Instantiate panes/scenes  #############################
 	    	//Initial scene
@@ -103,7 +104,12 @@ public class GameGui extends Application
 	        else
 	        {
 	        	homeScene.getStylesheets().clear();
-	        	homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+				try {
+					homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 	        	primaryStage.setScene(homeScene);
 	        }
 
@@ -121,7 +127,11 @@ public class GameGui extends Application
 	        setPane.setId("pane");
 	        setScene = new Scene(setPane, 1000, 700);
 	        setScene.getStylesheets().clear();
-        	setScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
+	        try {
+				setScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+			} catch (MalformedURLException e2) {
+				e2.printStackTrace();
+			}
 
 
 	        //######################## login layout ########################################
@@ -283,8 +293,11 @@ public class GameGui extends Application
 			        	//test user/password, change scene
 
 				        homeScene.getStylesheets().clear();
-				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-			        	primaryStage.setScene(homeScene);
+				        try {
+				        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+						} catch (MalformedURLException e2) {
+							e2.printStackTrace();
+						}			        	primaryStage.setScene(homeScene);
 	        		}
 
 	        		alert.setOnCloseRequest(e->{
@@ -298,8 +311,11 @@ public class GameGui extends Application
 			        	//test user/password, change scene
 
 				        homeScene.getStylesheets().clear();
-				        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-			        	primaryStage.setScene(homeScene);
+				        try {
+				        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+						} catch (MalformedURLException e2) {
+							e2.printStackTrace();
+						}			        	primaryStage.setScene(homeScene);
 	        		});
 
 
@@ -333,7 +349,7 @@ public class GameGui extends Application
 
 	       profile.setOnAction(e -> {
 				try {
-					new Profile().start(new Stage());
+					new Profile(user, pw).start(new Stage());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -343,7 +359,7 @@ public class GameGui extends Application
 
 	       settings.setOnAction(e -> {
 	    	   try {
-				new Settings().start(new Stage());
+				new Settings(user, pw).start(new Stage());
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -394,14 +410,14 @@ public class GameGui extends Application
 	        	this.user = uNameInput;
 
 	        	//test with system
-	        	System.out.println(uNameInput);
-	        	System.out.println(pwInput);
-
-	        	//test user/password, change scene
 
 		        homeScene.getStylesheets().clear();
-		        homeScene.getStylesheets().add("File:///"+f.getAbsolutePath().replace("\\","/"));
-	        	primaryStage.setScene(homeScene);
+		        try {
+		        	homeScene.getStylesheets().add(new File("style.css").toURI().toURL().toExternalForm());
+				} catch (MalformedURLException e2) {
+					e2.printStackTrace();
+				}	
+		        primaryStage.setScene(homeScene);
         	}
         	else
         	{
